@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="round_button_color">#FFBB86FC</color>
+    <color name="dark_purple">#6D3398</color>
 </resources>
