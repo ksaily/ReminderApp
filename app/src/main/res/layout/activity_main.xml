@@ -8,21 +8,21 @@
 
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="1500dp"
-        android:layout_height="1000dp"
+        android:layout_width="1200dp"
+        android:layout_height="900dp"
         android:background="@drawable/ic_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.646"
+        app:layout_constraintVertical_bias="0.573"
         app:srcCompat="@drawable/ic_background" />
 
     <TextView
         android:id="@+id/textViewUserName"
         android:layout_width="105dp"
         android:layout_height="24dp"
-        android:layout_marginTop="204dp"
+        android:layout_marginTop="216dp"
         android:fontFamily="sans-serif-medium"
         android:includeFontPadding="false"
         android:text="username"
@@ -56,7 +56,7 @@
         android:layout_height="35dp"
         android:fontFamily="sans-serif-medium"
         android:includeFontPadding="false"
-        android:padding="2dp"
+        android:padding="3dp"
         android:text="Sign up"
         android:textAlignment="center"
         android:textColor="@color/dark_purple"
@@ -94,47 +94,51 @@
         android:id="@+id/editUsername"
         android:layout_width="238dp"
         android:layout_height="35dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginBottom="517dp"
         android:background="@drawable/round_button"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/textViewPasswd"
+        android:padding="5dp"
+        android:paddingLeft="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.726" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="238dp"
         android:layout_height="35dp"
+        android:layout_marginTop="503dp"
+        android:layout_marginBottom="363dp"
         android:background="@drawable/round_button"
         android:ems="10"
         android:hint="password"
         android:inputType="textPassword"
-        android:padding="6dp"
+        android:padding="5dp"
+        android:paddingLeft="5dp"
         android:textAlignment="gravity"
         android:textColorHint="#D5FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.583" />
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
 
     <TextView
         android:id="@+id/textViewPasswd"
         android:layout_width="89dp"
         android:layout_height="27dp"
-        android:layout_marginTop="368dp"
         android:fontFamily="sans-serif-medium"
         android:text="password"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/createPassword"
+        app:layout_constraintBottom_toTopOf="@+id/editPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.98" />
+        app:layout_constraintTop_toBottomOf="@+id/editUsername"
+        app:layout_constraintVertical_bias="0.869" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

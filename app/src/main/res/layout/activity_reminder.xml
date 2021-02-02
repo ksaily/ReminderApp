@@ -9,18 +9,19 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="102dp"
-        android:layout_height="34dp"
+        android:layout_width="141dp"
+        android:layout_height="36dp"
         android:layout_marginBottom="9dp"
+        android:gravity="center"
         android:text="Description:"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/reminderAddInfo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.987" />
+        app:layout_constraintVertical_bias="0.992" />
 
     <EditText
         android:id="@+id/reminderAddInfo"
@@ -29,14 +30,14 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:textSize="30sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.179" />
+        app:layout_constraintVertical_bias="0.248" />
 
     <EditText
         android:id="@+id/reminderAddDate"
@@ -45,14 +46,14 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:textSize="30sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.341" />
+        app:layout_constraintVertical_bias="0.431" />
 
     <EditText
         android:id="@+id/reminderAddTime"
@@ -61,19 +62,20 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:textSize="30sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.619" />
 
     <Button
         android:id="@+id/btnAccept"
         android:layout_width="163dp"
         android:layout_height="84dp"
+        android:padding="5dp"
         android:text="Add Reminder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,29 +85,44 @@
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="67dp"
-        android:layout_height="24dp"
+        android:layout_width="185dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="12dp"
-        android:text="Date:"
-        android:textSize="18sp"
+        android:gravity="center"
+        android:text="Date (dd.mm.yyy)"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/reminderAddDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.046"
+        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="67dp"
-        android:layout_height="24dp"
+        android:layout_width="155dp"
+        android:layout_height="43dp"
         android:layout_marginBottom="13dp"
-        android:text="Time:"
-        android:textSize="18sp"
+        android:gravity="center"
+        android:text="Time (hh.mm)"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/reminderAddTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.04"
+        app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="259dp"
+        android:layout_height="84dp"
+        android:gravity="center"
+        android:text="NEW REMINDER"
+        android:textColor="@color/dark_purple"
+        android:textSize="30sp"
+        tools:layout_editor_absoluteX="75dp"
+        tools:layout_editor_absoluteY="19dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

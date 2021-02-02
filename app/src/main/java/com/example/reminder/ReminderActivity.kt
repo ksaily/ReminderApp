@@ -1,6 +1,7 @@
 package com.example.reminder
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,10 +28,11 @@ class ReminderActivity : AppCompatActivity() {
 
         binding.btnAccept.setOnClickListener {
             //validate entry values here
-            if (binding.reminderAddDate.text.isEmpty()) {
+            if (binding.reminderAddDate.text.isEmpty() || binding.reminderAddInfo.text.isEmpty() ||
+                    binding.reminderAddTime.text.isEmpty()) {
                 Toast.makeText(
                         applicationContext,
-                        "Date should not be empty and should be in dd.mm.yyyy format",
+                        "None of the fields should be empty and date should be in dd.mm.yyyy format",
                         Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
@@ -40,7 +42,7 @@ class ReminderActivity : AppCompatActivity() {
                     null,
                     name = binding.reminderAddInfo.text.toString(),
                     date = binding.reminderAddDate.text.toString(),
-                    time = binding.reminderAddTime.text.toString(),
+                    time = binding.reminderAddTime.text.toString()
 
                     )
 
@@ -54,7 +56,7 @@ class ReminderActivity : AppCompatActivity() {
             )
 
             AsyncTask.execute {
-                //save reminder to room datbase
+                //save reminder to room database
                 val db = databaseBuilder(
                         applicationContext,
                         AppDatabase::class.java,
@@ -64,6 +66,8 @@ class ReminderActivity : AppCompatActivity() {
                 db.close()
             }
             finish()
+            var menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
+            startActivity(menuActivityIntent)
         }
 
     }

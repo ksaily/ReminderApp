@@ -13,39 +13,45 @@
     <TextView
         android:id="@+id/ReminderInfo"
         android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_height="49dp"
         android:text="Info"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Reminder" />
+        android:text="Doctor's appointment"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/ReminderDate"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:text="Date"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="12.1.2020" />
+        android:text="12.05.2021"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/ReminderTime"
         android:layout_width="411dp"
         android:layout_height="48dp"
         android:text="Time"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:text="12.05" />
+        android:text="12.05"
+        android:textSize="18sp" />
 </LinearLayout>
