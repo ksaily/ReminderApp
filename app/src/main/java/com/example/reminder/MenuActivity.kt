@@ -3,6 +3,7 @@ package com.example.reminder
 import android.os.AsyncTask
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.ListView
 import android.widget.Toast
 import android.widget.AdapterView
@@ -115,7 +116,14 @@ class MenuActivity : AppCompatActivity() {
                         listView.adapter = adaptor
                     } else {
                         listView.adapter = null
-                        Toast.makeText(applicationContext, "No items now", Toast.LENGTH_SHORT).show()
+                        val text = "You have no reminders"
+                        val duration = Toast.LENGTH_LONG
+
+                        val toast = Toast.makeText(applicationContext, text, duration)
+                        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+                        toast.show()
+
+
                     }
                 }
             }

@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Reminder">
-        <activity android:name=".ReminderAdaptor"></activity>
+        <activity android:name=".ReminderActivity"> </activity>
+        <activity android:name=".ProfileScreen"/>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
