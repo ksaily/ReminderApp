@@ -9,11 +9,11 @@ import androidx.room.Transaction
 interface ReminderDao {
     @Transaction
     @Insert
-    fun insert(paymentInfo: ReminderInfo): Long
+    fun insert(reminderInfo: ReminderInfo): Long
 
     @Query("DELETE FROM reminderInfo WHERE uid = :id")
     fun delete(id: Int)
 
     @Query("SELECT * FROM reminderInfo")
-    fun getPaymentInfos(): List<ReminderInfo>
+    fun getReminderInfos(): List<ReminderInfo>
 }

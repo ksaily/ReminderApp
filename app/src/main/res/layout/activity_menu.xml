@@ -1,17 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="5dp"
     tools:context=".MainActivity">
 
-    <ListView
-        android:id="@+id/listView"
+    <TextView
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="58dp"
+        android:padding="5dp"
+        android:paddingTop="2dp"
+        android:text="Your Reminders"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <ListView
+        android:id="@+id/menuListView"
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
         android:divider="@color/dark_purple"
         android:dividerHeight="1dp"
+        android:footerDividersEnabled="false"
         android:listSelector="@color/purple_200"
-        android:footerDividersEnabled="false"/>
+        tools:listitem="@layout/activity_reminder_listview"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/addReminder"
+            android:layout_width="97dp"
+            android:layout_height="89dp"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+
+        <ImageView
+            android:id="@+id/profileButton"
+            android:layout_width="86dp"
+            android:layout_height="93dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addReminder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

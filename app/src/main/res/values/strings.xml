@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Reminder</string>
-    <string name="sharedPreferences" translatable="false">com.example.reminder</string>
+    <string name="sharedPreference" translatable="false">com.example.reminder</string>
 </resources>

@@ -6,19 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.reminder.ReminderInfo
+import com.example.reminder.databinding.ActivityMenuBinding
+import com.example.reminder.databinding.ActivityReminderListviewBinding
 
-abstract class ReminderAdaptor(context: Context, private  val list:List<ReminderInfo>): BaseAdapter() {}
 
-    /*private val inflater: LayoutInflater =
-            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row = inflater.inflate(R.layout.activity_reminder_listview, parent, false
 
-        //set payment info values to the list item
-        row.txtInfo.text=list[position].info
-        row.txtDate.text=list[position].date
-        row.txtTime.text=list[position].time
-        return  row
+class ReminderAdaptor(context: Context, private  val list: List<ReminderInfo>) : BaseAdapter() {
+
+    private val inflater: LayoutInflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    override fun getView(position: Int, convertView: View?, container: ViewGroup?): View? {
+        var rowBinding = ActivityReminderListviewBinding.inflate(inflater, container, false)
+
+                //set payment info values to the list item
+                rowBinding.ReminderInfo.text = list[position].name
+                rowBinding.ReminderDate.text = list[position].date
+                rowBinding.ReminderTime.text = list[position].time
+            return  rowBinding.root
     }
     override fun getItem(position: Int): Any {
         return list[position]
@@ -33,4 +38,3 @@ abstract class ReminderAdaptor(context: Context, private  val list:List<Reminder
     }
 
 }
-*/

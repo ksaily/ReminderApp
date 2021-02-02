@@ -15,21 +15,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.655"
+        app:layout_constraintVertical_bias="0.646"
         app:srcCompat="@drawable/ic_background" />
 
     <TextView
         android:id="@+id/textViewUserName"
         android:layout_width="105dp"
         android:layout_height="24dp"
+        android:layout_marginTop="204dp"
         android:fontFamily="sans-serif-medium"
         android:includeFontPadding="false"
         android:text="username"
         android:textColor="@color/dark_purple"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextUsername"
+        app:layout_constraintBottom_toTopOf="@+id/createUsername"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.967" />
@@ -91,7 +91,7 @@
         app:strokeColor="#C59C9C" />
 
     <EditText
-        android:id="@+id/editTextUsername"
+        android:id="@+id/editUsername"
         android:layout_width="238dp"
         android:layout_height="35dp"
         android:background="@drawable/round_button"
@@ -105,7 +105,7 @@
         app:layout_constraintVertical_bias="0.342" />
 
     <EditText
-        android:id="@+id/editTextPassword"
+        android:id="@+id/editPassword"
         android:layout_width="238dp"
         android:layout_height="35dp"
         android:background="@drawable/round_button"
@@ -117,7 +117,7 @@
         android:textColorHint="#D5FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.583" />
@@ -126,11 +126,12 @@
         android:id="@+id/textViewPasswd"
         android:layout_width="89dp"
         android:layout_height="27dp"
+        android:layout_marginTop="368dp"
         android:fontFamily="sans-serif-medium"
         android:text="password"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+        app:layout_constraintBottom_toTopOf="@+id/createPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
