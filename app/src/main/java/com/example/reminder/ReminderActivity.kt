@@ -17,6 +17,7 @@ import java.util.*
 
 @Suppress("DEPRECATION")
 class ReminderActivity : AppCompatActivity() {
+    //Add new reminders, executed when the plus button on menu screen is pressed
 
     private lateinit var binding: ActivityReminderBinding
 
@@ -66,6 +67,7 @@ class ReminderActivity : AppCompatActivity() {
                 db.close()
             }
             finish()
+            //return to menu screen
             var menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
             startActivity(menuActivityIntent)
         }

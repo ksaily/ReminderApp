@@ -15,24 +15,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.573"
+        app:layout_constraintVertical_bias="0.603"
         app:srcCompat="@drawable/ic_background" />
 
     <TextView
         android:id="@+id/textViewUserName"
         android:layout_width="105dp"
         android:layout_height="24dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginBottom="1dp"
         android:fontFamily="sans-serif-medium"
         android:includeFontPadding="false"
         android:text="username"
         android:textColor="@color/dark_purple"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/createUsername"
+        app:layout_constraintBottom_toTopOf="@+id/editUsername"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.967" />
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage"
+        app:layout_constraintVertical_bias="0.98" />
 
     <TextView
         android:id="@+id/textViewSignupText"
@@ -87,25 +87,24 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPassword"
-        app:layout_constraintVertical_bias="0.103"
+        app:layout_constraintVertical_bias="0.141"
         app:strokeColor="#C59C9C" />
 
     <EditText
         android:id="@+id/editUsername"
         android:layout_width="238dp"
         android:layout_height="35dp"
-        android:layout_marginTop="252dp"
-        android:layout_marginBottom="517dp"
         android:background="@drawable/round_button"
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="5dp"
         android:paddingLeft="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintBottom_toTopOf="@+id/editPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.782" />
 
     <EditText
         android:id="@+id/editPassword"
@@ -123,14 +122,16 @@
         android:textColorHint="#D5FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textViewPasswd"
         android:layout_width="89dp"
         android:layout_height="27dp"
+        android:layout_marginBottom="1dp"
         android:fontFamily="sans-serif-medium"
         android:text="password"
         android:textColor="#FFFFFF"
@@ -139,6 +140,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editUsername"
-        app:layout_constraintVertical_bias="0.869" />
+        app:layout_constraintVertical_bias="0.912" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="205dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginBottom="19dp"
+        android:gravity="center"
+        android:text="Welcome to Remindr"
+        android:textColor="@color/dark_purple"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textViewUserName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage"
+        app:layout_constraintVertical_bias="0.55" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

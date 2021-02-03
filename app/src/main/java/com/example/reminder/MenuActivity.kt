@@ -19,6 +19,7 @@ import com.example.reminder.databinding.ActivityReminderListviewBinding
 
 @Suppress("DEPRECATION")
 class MenuActivity : AppCompatActivity() {
+    //Menu stores the reminders in a list view
     private lateinit var binding1: ActivityMenuBinding
     private lateinit var listView: ListView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,17 +34,19 @@ class MenuActivity : AppCompatActivity() {
         refreshListView()
 
         binding1.addReminder.setOnClickListener {
+            //If the plus button is clicked, move to add new reminders in ReminderActivity
             var reminderIntent = Intent(applicationContext, ReminderActivity::class.java)
             startActivity(reminderIntent)
         }
 
         binding1.profileButton.setOnClickListener {
+            //If the profile button is clicked, move to ProfileScreen
             var profileIntent = Intent(applicationContext,ProfileScreen::class.java)
             startActivity(profileIntent)
         }
 
             listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, id ->
-                //retrieve selected Item
+                //retrieve selected reminder
 
                 val selectedReminder = listView.adapter.getItem(position) as ReminderInfo
                 val message =

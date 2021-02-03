@@ -12,7 +12,7 @@ import com.example.reminder.databinding.ActivityReminderListviewBinding
 
 
 class ReminderAdaptor(context: Context, private  val list: List<ReminderInfo>) : BaseAdapter() {
-
+    // Adaptor for the list view in menu
     private val inflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

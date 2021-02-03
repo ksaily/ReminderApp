@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.reminder.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
+    //Page where user can sign up
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +29,8 @@ class SignUpActivity : AppCompatActivity() {
     }
 
         private fun saveData(): Int {
-            val username = binding.createUsername.getText().toString()
-            val password = binding.createPassword.getText().toString()
+            val username = binding.createUsername.text.toString()
+            val password = binding.createPassword.text.toString()
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 //If the username and is inserted, save them to shared preferences
                 applicationContext.getSharedPreferences(

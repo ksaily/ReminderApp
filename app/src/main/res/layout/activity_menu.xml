@@ -24,8 +24,9 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="403dp"
-        android:layout_height="73dp"
+        android:layout_width="400dp"
+        android:layout_height="83dp"
+        android:gravity="center"
         android:minHeight="50dp"
         android:padding="5dp"
         android:paddingTop="2dp"

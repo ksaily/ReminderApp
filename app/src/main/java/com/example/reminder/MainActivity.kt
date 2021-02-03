@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.example.reminder.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    //Log in screen
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,36 +23,38 @@ class MainActivity : AppCompatActivity() {
 
         binding.SignIn.setOnClickListener {
             Log.d("Lab", "Sign in Button Clicked")
-            //Authentication goes here
+            //checkLoginInfo will check if the username & password are correct
+            //they are retrieved from shared preferences
+
             if (checkLoginInfo() == 1) {
                 //save loginstatus
                 applicationContext.getSharedPreferences(
                         getString(R.string.sharedPreference),
                         Context.MODE_PRIVATE
                 ).edit().putInt("LoginStatus", 1).apply()
-                //use getInt above after user has registered
                 startActivity(
+                        //Move to menu
                         Intent(applicationContext, MenuActivity::class.java)
                 )
-            }/* else {
-                checkLoginStatus()
-            }*/
+            }
         }
 
         binding.textViewSignUp.setOnClickListener {
             Log.d("Signup", "Sign up Button Clicked")
-
+            //Move to sign up screen where the user can create a profile
             var signUpIntent = Intent(applicationContext, SignUpActivity::class.java)
             startActivity(signUpIntent)
         }
-        }
+    }
 
 
-    /*override fun onResume() {
+    override fun onResume() {
+        //if the user has already signed in, move straight to menu screen
         super.onResume()
         checkLoginStatus()
-    }*/
+    }
     private fun checkLoginInfo(): Int {
+        //check username and password from shared preferences, return 1 if found
         val username = applicationContext.getSharedPreferences(
                 getString(R.string.sharedPreference),
                 Context.MODE_PRIVATE
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkLoginStatus() {
+        //check if the user has previously logged in
         val loginStatus = applicationContext.getSharedPreferences(
                 getString(R.string.sharedPreference),
                 Context.MODE_PRIVATE
