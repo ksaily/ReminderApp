@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 ).edit().putInt("LoginStatus", 1).apply()
                 startActivity(
                         //Move to menu
-                        Intent(applicationContext, MenuActivity::class.java)
+                    Intent(applicationContext, MenuActivity::class.java)
                 )
             }
         }
@@ -53,18 +53,19 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         checkLoginStatus()
     }
+
     private fun checkLoginInfo(): Int {
         //check username and password from shared preferences, return 1 if found
         val username = applicationContext.getSharedPreferences(
                 getString(R.string.sharedPreference),
                 Context.MODE_PRIVATE
-        ).getString("username", "")
+        ).getString("username", "empty")
         val password = applicationContext.getSharedPreferences(
                 getString(R.string.sharedPreference),
                 Context.MODE_PRIVATE
-        ).getString("password", "")
-        val editUsername = binding.editUsername.getText().toString()
-        val editPassword = binding.editPassword.getText().toString()
+        ).getString("password", "empty")
+        val editUsername = binding.editUsername.text.toString()
+        val editPassword = binding.editPassword.text.toString()
         println("Username and password" + editUsername + editPassword)
         if (editUsername == username && editPassword == password) {
             Log.d("Signedin", "Sign in was successful")

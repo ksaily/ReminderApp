@@ -16,7 +16,7 @@ class ProfileScreen : AppCompatActivity() {
         val view = binding.root
         val username = applicationContext.getSharedPreferences(
                 getString(R.string.sharedPreference), Context.MODE_PRIVATE
-        ).getString("username","")
+        ).getString("username","empty")
         binding.showUserName.text = username
         setContentView(view)
         binding.LogOutBtn.setOnClickListener {
@@ -26,6 +26,8 @@ class ProfileScreen : AppCompatActivity() {
                     getString(R.string.sharedPreference),
                     Context.MODE_PRIVATE
             ).edit().putInt("LoginStatus", 0).apply()
+            println()
+
             startActivity(mainActivityIntent)
         }
     }
