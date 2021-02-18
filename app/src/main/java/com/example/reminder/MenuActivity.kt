@@ -1,5 +1,6 @@
 package com.example.reminder
 
+import android.content.Context
 import android.os.AsyncTask
 import android.content.Intent
 import android.os.Bundle
@@ -50,11 +51,10 @@ class MenuActivity : AppCompatActivity() {
 
                 val selectedReminder = listView.adapter.getItem(position) as ReminderInfo
                 val message =
-                    "Do you want to delete ${selectedReminder.name} reminder, at ${selectedReminder.time} on ${selectedReminder.date} ?"
-
+                    "Do you want to delete or edit ${selectedReminder.name} reminder, at ${selectedReminder.time} on ${selectedReminder.date} ?"
                 // Show AlertDialog to delete the reminder
                 val builder = AlertDialog.Builder(this@MenuActivity)
-                builder.setTitle("Delete reminder?")
+                builder.setTitle("Delete or edit reminder?")
                     .setMessage(message)
                     .setPositiveButton("Delete") { _, _ ->
                         // Update UI
@@ -75,7 +75,16 @@ class MenuActivity : AppCompatActivity() {
                         //refresh reminder list
                         refreshListView()
                     }
-                    .setNegativeButton("Cancel") { dialog, _ ->
+
+                        .setNegativeButton("Edit") { _, _ ->
+                            applicationContext.getSharedPreferences(
+                                    getString(R.string.sharedPreference),
+                                    Context.MODE_PRIVATE
+                            ).edit().putInt("UID", selectedReminder.uid!!).apply()
+                            var reminderEditIntent = Intent(applicationContext, EditReminderActivity::class.java)
+                            startActivity(reminderEditIntent)
+                        }
+                    .setNeutralButton("Cancel") { dialog, _ ->
                         // Do nothing
                         dialog.dismiss()
                     }

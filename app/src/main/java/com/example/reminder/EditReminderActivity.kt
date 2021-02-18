@@ -3,34 +3,31 @@ package com.example.reminder
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import androidx.room.Room.databaseBuilder
-import com.example.reminder.AppDatabase
-import com.example.reminder.ReminderInfo
-import com.example.reminder.databinding.ActivityReminderBinding
+import android.view.LayoutInflater
+import com.example.reminder.databinding.ActivityEditReminderBinding
 import java.util.*
 
 @Suppress("DEPRECATION")
-class ReminderActivity : AppCompatActivity() {
+class EditReminderActivity : AppCompatActivity() {
     //Add new reminders, executed when the plus button on menu screen is pressed
 
-    private lateinit var binding: ActivityReminderBinding
+    private lateinit var binding: ActivityEditReminderBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityReminderBinding.inflate(layoutInflater)
+        binding = ActivityEditReminderBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        binding.btnAccept.setOnClickListener {
+        binding.btnAcceptEdit.setOnClickListener {
             //validate entry values here
-            if (binding.reminderAddDate.text.isEmpty() || binding.reminderAddInfo.text.isEmpty() ||
-                    binding.reminderAddTime.text.isEmpty()) {
+            if (binding.reminderEditDate.text.isEmpty() || binding.reminderEditInfo.text.isEmpty() ||
+                    binding.reminderEditTime.text.isEmpty()) {
                 Toast.makeText(
                         applicationContext,
                         "None of the fields should be empty and date should be in dd.mm.yyyy format",
@@ -38,12 +35,23 @@ class ReminderActivity : AppCompatActivity() {
                 ).show()
                 return@setOnClickListener
             }
+            val db = Room.databaseBuilder(
+                    applicationContext,
+                    AppDatabase::class.java,
+                    "com.example.reminder"
+            ).build()
+
+            //get the id of room entity to update
+            val uid = applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).getInt("UID", 0)
 
             val reminderInfo = ReminderInfo(
-                    null,
-                    name = binding.reminderAddInfo.text.toString(),
-                    date = binding.reminderAddDate.text.toString(),
-                    time = binding.reminderAddTime.text.toString()
+                    uid,
+                    name = binding.reminderEditInfo.text.toString(),
+                    date = binding.reminderEditDate.text.toString(),
+                    time = binding.reminderEditTime.text.toString()
             )
 
             //convert date  string value to Date format using dd.mm.yyyy
@@ -55,28 +63,21 @@ class ReminderActivity : AppCompatActivity() {
                     dateparts[0].toInt()
             )
 
-
             AsyncTask.execute {
-                //save reminder to room database
-                val db = databaseBuilder(
+                //update reminder to room database
+                val db = Room.databaseBuilder(
                         applicationContext,
                         AppDatabase::class.java,
                         "com.example.reminder"
                 ).build()
-                val uuid = db.reminderDao().insert(reminderInfo).toInt()
+                val uuid = db.reminderDao().update(reminderInfo)
                 db.close()
             }
             finish()
-            applicationContext.getSharedPreferences(
-                    getString(R.string.sharedPreference),
-                    Context.MODE_PRIVATE
-            ).edit().putInt("EditStatus", 0).apply()
             //return to menu screen
             val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
             startActivity(menuActivityIntent)
         }
 
-        }
-
     }
-
+}
