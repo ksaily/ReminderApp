@@ -67,10 +67,7 @@ class ReminderActivity : AppCompatActivity() {
                 db.close()
             }
             finish()
-            applicationContext.getSharedPreferences(
-                    getString(R.string.sharedPreference),
-                    Context.MODE_PRIVATE
-            ).edit().putInt("EditStatus", 0).apply()
+
             //return to menu screen
             val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
             startActivity(menuActivityIntent)

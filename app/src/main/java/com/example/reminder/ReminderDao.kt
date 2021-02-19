@@ -10,6 +10,7 @@ interface ReminderDao {
     fun insert(reminderInfo: ReminderInfo): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
+    //Update the current reminder if information is changed
     fun update(reminderInfo: ReminderInfo)
 
     @Query("DELETE FROM reminderInfo WHERE uid = :id")

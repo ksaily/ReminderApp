@@ -21,7 +21,7 @@ class ProfileScreen : AppCompatActivity() {
         setContentView(view)
         binding.LogOutBtn.setOnClickListener {
             //Log out
-            var mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
+            val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
             applicationContext.getSharedPreferences(
                     getString(R.string.sharedPreference),
                     Context.MODE_PRIVATE

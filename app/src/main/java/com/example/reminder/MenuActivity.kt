@@ -21,28 +21,28 @@ import com.example.reminder.databinding.ActivityReminderListviewBinding
 @Suppress("DEPRECATION")
 class MenuActivity : AppCompatActivity() {
     //Menu stores the reminders in a list view
-    private lateinit var binding1: ActivityMenuBinding
+    private lateinit var binding: ActivityMenuBinding
     private lateinit var listView: ListView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding1= ActivityMenuBinding.inflate(layoutInflater)
-        val view =binding1.root
+        binding= ActivityMenuBinding.inflate(layoutInflater)
+        val view =binding.root
         setContentView(view)
 
-        listView = binding1.menuListView
+        listView = binding.menuListView
 
         //update userInterface
         refreshListView()
 
-        binding1.addReminder.setOnClickListener {
+        binding.addReminder.setOnClickListener {
             //If the plus button is clicked, move to add new reminders in ReminderActivity
-            var reminderIntent = Intent(applicationContext, ReminderActivity::class.java)
+            val reminderIntent = Intent(applicationContext, ReminderActivity::class.java)
             startActivity(reminderIntent)
         }
 
-        binding1.profileButton.setOnClickListener {
+        binding.profileButton.setOnClickListener {
             //If the profile button is clicked, move to ProfileScreen
-            var profileIntent = Intent(applicationContext,ProfileScreen::class.java)
+            val profileIntent = Intent(applicationContext,ProfileScreen::class.java)
             startActivity(profileIntent)
         }
 
@@ -75,28 +75,29 @@ class MenuActivity : AppCompatActivity() {
                         //refresh reminder list
                         refreshListView()
                     }
+                        //set the edit button
+                    .setNegativeButton("Edit") { _, _ ->
+                        //save the information of selected reminder to shared preferences
+                        applicationContext.getSharedPreferences(
+                            getString(R.string.sharedPreference),
+                            Context.MODE_PRIVATE
+                        ).edit().putInt("UID", selectedReminder.uid!!).apply()
+                        applicationContext.getSharedPreferences(
+                            getString(R.string.sharedPreference),
+                            Context.MODE_PRIVATE
+                        ).edit().putString("name", selectedReminder.name).apply()
+                        applicationContext.getSharedPreferences(
+                            getString(R.string.sharedPreference),
+                            Context.MODE_PRIVATE
+                        ).edit().putString("time", selectedReminder.time).apply()
+                        applicationContext.getSharedPreferences(
+                            getString(R.string.sharedPreference),
+                            Context.MODE_PRIVATE
+                        ).edit().putString("date", selectedReminder.date).apply()
 
-                        .setNegativeButton("Edit") { _, _ ->
-                            applicationContext.getSharedPreferences(
-                                    getString(R.string.sharedPreference),
-                                    Context.MODE_PRIVATE
-                            ).edit().putInt("UID", selectedReminder.uid!!).apply()
-                            applicationContext.getSharedPreferences(
-                                    getString(R.string.sharedPreference),
-                                    Context.MODE_PRIVATE
-                            ).edit().putString("name", selectedReminder.name!!).apply()
-                            applicationContext.getSharedPreferences(
-                                    getString(R.string.sharedPreference),
-                                    Context.MODE_PRIVATE
-                            ).edit().putString("time", selectedReminder.time!!).apply()
-                            applicationContext.getSharedPreferences(
-                                    getString(R.string.sharedPreference),
-                                    Context.MODE_PRIVATE
-                            ).edit().putString("date", selectedReminder.date!!).apply()
-
-                            var reminderEditIntent = Intent(applicationContext, EditReminderActivity::class.java)
-                            startActivity(reminderEditIntent)
-                        }
+                        val reminderEditIntent = Intent(applicationContext, EditReminderActivity::class.java)
+                        startActivity(reminderEditIntent)
+                    }
                     .setNeutralButton("Cancel") { dialog, _ ->
                         // Do nothing
                         dialog.dismiss()
@@ -113,7 +114,7 @@ class MenuActivity : AppCompatActivity() {
 
         @Suppress("DEPRECATION")
         private fun refreshListView() {
-            var refreshTask = LoadReminderInfoEntries()
+            val refreshTask = LoadReminderInfoEntries()
             refreshTask.execute()
 
         }
@@ -159,4 +160,4 @@ class MenuActivity : AppCompatActivity() {
        /* companion object {
             val List = mutableListOf<ReminderInfo>()
         }*/
-    }
+}
