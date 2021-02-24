@@ -10,7 +10,6 @@ import androidx.room.Room
 import androidx.room.Room.databaseBuilder
 import android.view.LayoutInflater
 import com.example.reminder.databinding.ActivityEditReminderBinding
-import com.example.reminder.databinding.ActivityReminderListviewBinding
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -97,5 +96,11 @@ class EditReminderActivity : AppCompatActivity() {
             val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
             startActivity(menuActivityIntent)
         }
+
     }
+
 }
+
+
+
+

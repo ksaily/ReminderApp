@@ -29,11 +29,11 @@ class ReminderActivity : AppCompatActivity() {
 
         binding.btnAccept.setOnClickListener {
             //validate entry values here
-            if (binding.reminderAddDate.text.isEmpty() || binding.reminderAddInfo.text.isEmpty() ||
-                    binding.reminderAddTime.text.isEmpty()) {
+            if (binding.reminderAddDate.text.isEmpty() /*|| binding.reminderAddInfo.text.isEmpty() ||
+                    binding.reminderAddTime.text.isEmpty()*/) {
                 Toast.makeText(
                         applicationContext,
-                        "None of the fields should be empty and date should be in dd.mm.yyyy format",
+                        "Info should not be empty",
                         Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
@@ -49,10 +49,13 @@ class ReminderActivity : AppCompatActivity() {
             //convert date  string value to Date format using dd.mm.yyyy
             // here it is asummed that date is in dd.mm.yyyy
             val dateparts = reminderInfo.date.split(".").toTypedArray()
-            val calender = GregorianCalendar(
+            val timeparts = reminderInfo.time.split(":").toTypedArray()
+            val reminderCalendar = GregorianCalendar(
                     dateparts[2].toInt(),
                     dateparts[1].toInt() - 1,
-                    dateparts[0].toInt()
+                    dateparts[0].toInt(),
+                    timeparts[0].toInt(),
+                    timeparts[1].toInt()
             )
 
 
@@ -65,15 +68,36 @@ class ReminderActivity : AppCompatActivity() {
                 ).build()
                 val uuid = db.reminderDao().insert(reminderInfo).toInt()
                 db.close()
+
+                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+                    // event happens in the future set reminder
+                    val message =
+                            "Reminder! ${reminderInfo.name}, on ${reminderInfo.date} at ${reminderInfo.time}"
+                    ReminderHistory.setRemnder(
+                            applicationContext,
+                            uuid,
+                            reminderCalendar.timeInMillis,
+                            message
+                    )
+                }
             }
+
+            if(reminderCalendar.timeInMillis>Calendar.getInstance().timeInMillis){
+                Toast.makeText(
+                        applicationContext,
+                        "Reminder for future saved.",
+                        Toast.LENGTH_SHORT
+                ).show()
+            }
+
             finish()
 
-            //return to menu screen
+                //return to menu screen
             val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
             startActivity(menuActivityIntent)
         }
 
-        }
-
     }
+
+}
 

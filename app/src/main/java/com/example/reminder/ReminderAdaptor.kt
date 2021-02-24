@@ -11,7 +11,7 @@ import com.example.reminder.databinding.ActivityReminderListviewBinding
 
 
 
-class ReminderAdaptor(context: Context, private  val list: List<ReminderInfo>) : BaseAdapter() {
+class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) : BaseAdapter() {
     // Adaptor for the list view in menu
     private val inflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -20,13 +20,13 @@ class ReminderAdaptor(context: Context, private  val list: List<ReminderInfo>) :
         var rowBinding = ActivityReminderListviewBinding.inflate(inflater, container, false)
 
                 //set reminder info values to the list item
-                rowBinding.ReminderInfo.text = list[position].name
+                rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
                 rowBinding.ReminderTime.text = list[position].time
             return  rowBinding.root
     }
     override fun getItem(position: Int): Any {
-        return list[position]
+        return list!![position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -34,7 +34,7 @@ class ReminderAdaptor(context: Context, private  val list: List<ReminderInfo>) :
     }
 
     override fun getCount(): Int {
-        return list.size
+        return list!!.size
     }
 
 }

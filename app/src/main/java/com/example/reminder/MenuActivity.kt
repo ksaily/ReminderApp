@@ -12,10 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room.databaseBuilder
-import com.example.reminder.AppDatabase
-import com.example.reminder.ReminderInfo
 import com.example.reminder.databinding.ActivityMenuBinding
-import com.example.reminder.databinding.ActivityReminderListviewBinding
 
 
 @Suppress("DEPRECATION")
@@ -44,6 +41,10 @@ class MenuActivity : AppCompatActivity() {
             //If the profile button is clicked, move to ProfileScreen
             val profileIntent = Intent(applicationContext,ProfileScreen::class.java)
             startActivity(profileIntent)
+        }
+        binding.FutureReminders.setOnClickListener {
+            val futureReminderIntent = Intent(applicationContext, ReminderHistory::class.java)
+            startActivity(futureReminderIntent)
         }
 
             listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, id ->
@@ -142,7 +143,7 @@ class MenuActivity : AppCompatActivity() {
                         listView.adapter = adaptor
                     } else {
                         listView.adapter = null
-                        val text = "You have no reminders"
+                        val text = "You have no reminders that have occurred"
                         val duration = Toast.LENGTH_LONG
 
                         val toast = Toast.makeText(applicationContext, text, duration)
@@ -155,9 +156,4 @@ class MenuActivity : AppCompatActivity() {
             }
 
         }
-
-
-       /* companion object {
-            val List = mutableListOf<ReminderInfo>()
-        }*/
 }
