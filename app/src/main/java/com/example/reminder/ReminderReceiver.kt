@@ -3,6 +3,8 @@ package com.example.reminder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.room.Room
+import java.lang.reflect.Array.get
 
 class ReminderReceiver : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -13,4 +15,5 @@ class ReminderReceiver : BroadcastReceiver(){
 
         ReminderHistory.showNofitication(context!!,text!!)
     }
+
 }

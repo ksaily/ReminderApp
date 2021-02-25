@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
-import androidx.room.Room.databaseBuilder
-import android.view.LayoutInflater
 import com.example.reminder.databinding.ActivityEditReminderBinding
 import java.util.*
 
@@ -69,7 +67,9 @@ class EditReminderActivity : AppCompatActivity() {
                 uid,
                 name = binding.reminderEditInfo.text.toString(),
                 date = binding.reminderEditDate.text.toString(),
-                time = binding.reminderEditTime.text.toString()
+                time = binding.reminderEditTime.text.toString(),
+                creation_time = Calendar.getInstance().timeInMillis,
+                reminder_seen = "no"
             )
 
             //convert date  string value to Date format using dd.mm.yyyy
@@ -82,7 +82,19 @@ class EditReminderActivity : AppCompatActivity() {
             )
 
             AsyncTask.execute {
-                //update reminder to room database
+                //update reminder to room database and the notification
+                ReminderHistory.cancelReminder(
+                        applicationContext,
+                        uid
+                )
+                val message =
+                        "Reminder! ${reminderInfo.name}, on ${reminderInfo.date} at ${reminderInfo.time}"
+                ReminderHistory.setRemnder(
+                        applicationContext,
+                        uid,
+                        calender.timeInMillis,
+                        message
+                )
                 val db = Room.databaseBuilder(
                     applicationContext,
                     AppDatabase::class.java,

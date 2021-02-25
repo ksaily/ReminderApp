@@ -49,8 +49,12 @@ class ReminderHistory : AppCompatActivity() {
                         // Update UI
 
 
-                        //delete from database
+                        //delete from database and delete reminder
                         AsyncTask.execute {
+                            cancelReminder(
+                                    applicationContext,
+                                    selectedReminder.uid!!
+                            )
                             val db = Room.databaseBuilder(
                                     applicationContext,
                                     AppDatabase::class.java,
@@ -105,7 +109,6 @@ class ReminderHistory : AppCompatActivity() {
     private fun refreshListView() {
         val refreshTask = LoadReminderInfoEntries()
         refreshTask.execute()
-
     }
 
     @Suppress("DEPRECATION")
@@ -150,7 +153,7 @@ class ReminderHistory : AppCompatActivity() {
          @SuppressLint("ServiceCast")
          fun showNofitication(context: Context, message: String) {
 
-             val CHANNEL_ID = "BANKING_APP_NOTIFICATION_CHANNEL"
+             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
              var notificationId = Random.nextInt(10, 1000) + 5
              // notificationId += Random(notificationId).nextInt(1, 500)
 
@@ -191,9 +194,10 @@ class ReminderHistory : AppCompatActivity() {
             val pendingIntent =
                     PendingIntent.getBroadcast(context, uid, intent, PendingIntent.FLAG_ONE_SHOT)
 
-            //create a service to moniter and execute the fure action.
+            //create a service to monitor and execute the fure action.
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.setExact(AlarmManager.RTC, timeInMillis, pendingIntent)
+
         }
 
         fun cancelReminder(context: Context, pendingIntentId: Int) {
@@ -208,6 +212,9 @@ class ReminderHistory : AppCompatActivity() {
                     )
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
+        }
+        fun getListItem(context: Context, reminderInf: List<ReminderInfo>?, uid: Int): Any {
+                return reminderInf!![uid]
         }
     }
 }

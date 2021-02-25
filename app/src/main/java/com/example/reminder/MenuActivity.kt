@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room.databaseBuilder
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.example.reminder.databinding.ActivityMenuBinding
 
 
@@ -61,8 +63,12 @@ class MenuActivity : AppCompatActivity() {
                         // Update UI
 
 
-                        //delete from database
+                        //delete from database and delete reminder
                         AsyncTask.execute {
+                            ReminderHistory.cancelReminder(
+                                    applicationContext,
+                                    selectedReminder.uid!!
+                            )
                             val db = databaseBuilder(
                                     applicationContext,
                                     AppDatabase::class.java,
@@ -155,5 +161,5 @@ class MenuActivity : AppCompatActivity() {
                 }
             }
 
-        }
+    }
 }

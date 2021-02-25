@@ -19,22 +19,22 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
     override fun getView(position: Int, convertView: View?, container: ViewGroup?): View? {
         var rowBinding = ActivityReminderListviewBinding.inflate(inflater, container, false)
 
-                //set reminder info values to the list item
-                rowBinding.ReminderInfo.text = list!![position].name
-                rowBinding.ReminderDate.text = list[position].date
-                rowBinding.ReminderTime.text = list[position].time
-            return  rowBinding.root
+        //set reminder info values to the list item
+        rowBinding.ReminderInfo.text = list!![position].name
+        rowBinding.ReminderDate.text = list[position].date
+        rowBinding.ReminderTime.text = list[position].time
+        return rowBinding.root
     }
-    override fun getItem(position: Int): Any {
-        return list!![position]
-    }
+        override fun getItem(position: Int): Any {
+            return list!![position]
+        }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
 
-    override fun getCount(): Int {
-        return list!!.size
-    }
+        override fun getCount(): Int {
+            return list!!.size
+        }
 
 }
