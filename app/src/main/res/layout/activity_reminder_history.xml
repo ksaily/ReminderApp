@@ -33,7 +33,7 @@
             android:textSize="40sp" />
 
         <ListView
-            android:id="@+id/menuListView"
+            android:id="@+id/historyListView"
             android:layout_width="wrap_content"
             android:layout_height="565dp"
             android:divider="@color/dark_purple"

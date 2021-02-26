@@ -54,7 +54,7 @@ class MenuActivity : AppCompatActivity() {
 
                 val selectedReminder = listView.adapter.getItem(position) as ReminderInfo
                 val message =
-                    "Do you want to delete or edit ${selectedReminder.name} reminder, at ${selectedReminder.time} on ${selectedReminder.date} ?"
+                    "Do you want to delete or edit ${selectedReminder.name} reminder, Date (and time): ${selectedReminder.date} ?"
                 // Show AlertDialog to delete the reminder
                 val builder = AlertDialog.Builder(this@MenuActivity)
                 builder.setTitle("Delete or edit reminder?")
@@ -96,10 +96,6 @@ class MenuActivity : AppCompatActivity() {
                         applicationContext.getSharedPreferences(
                             getString(R.string.sharedPreference),
                             Context.MODE_PRIVATE
-                        ).edit().putString("time", selectedReminder.time).apply()
-                        applicationContext.getSharedPreferences(
-                            getString(R.string.sharedPreference),
-                            Context.MODE_PRIVATE
                         ).edit().putString("date", selectedReminder.date).apply()
 
                         val reminderEditIntent = Intent(applicationContext, EditReminderActivity::class.java)
@@ -122,6 +118,7 @@ class MenuActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         private fun refreshListView() {
             val refreshTask = LoadReminderInfoEntries()
+            refreshTask.get()
             refreshTask.execute()
 
         }

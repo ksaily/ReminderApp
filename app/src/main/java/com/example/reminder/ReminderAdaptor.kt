@@ -22,7 +22,6 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
         //set reminder info values to the list item
         rowBinding.ReminderInfo.text = list!![position].name
         rowBinding.ReminderDate.text = list[position].date
-        rowBinding.ReminderTime.text = list[position].time
         return rowBinding.root
     }
         override fun getItem(position: Int): Any {

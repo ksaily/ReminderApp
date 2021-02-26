@@ -14,14 +14,19 @@ import android.view.Gravity
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
+import androidx.work.OneTimeWorkRequestBuilder
+import java.util.concurrent.TimeUnit
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.room.Room
+import androidx.work.Data
+import androidx.work.WorkManager
 import com.example.reminder.databinding.ActivityReminderHistoryBinding
 import kotlin.random.Random
 
 class ReminderHistory : AppCompatActivity() {
+
     private lateinit var binding: ActivityReminderHistoryBinding
     private lateinit var listView: ListView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +35,7 @@ class ReminderHistory : AppCompatActivity() {
         val view =binding.root
         setContentView(view)
 
-        listView = binding.menuListView
+        listView = binding.historyListView
 
         //update userInterface
         refreshListView()
@@ -40,7 +45,7 @@ class ReminderHistory : AppCompatActivity() {
 
             val selectedReminder = listView.adapter.getItem(position) as ReminderInfo
             val message =
-                    "Do you want to delete or edit ${selectedReminder.name} reminder, at ${selectedReminder.time} on ${selectedReminder.date} ?"
+                    "Do you want to delete or edit ${selectedReminder.name} reminder, Date (and time): ${selectedReminder.date} ?"
             // Show AlertDialog to delete the reminder
             val builder = AlertDialog.Builder(this@ReminderHistory)
             builder.setTitle("Delete or edit reminder?")
@@ -49,12 +54,8 @@ class ReminderHistory : AppCompatActivity() {
                         // Update UI
 
 
-                        //delete from database and delete reminder
+                        //delete from database
                         AsyncTask.execute {
-                            cancelReminder(
-                                    applicationContext,
-                                    selectedReminder.uid!!
-                            )
                             val db = Room.databaseBuilder(
                                     applicationContext,
                                     AppDatabase::class.java,
@@ -63,6 +64,11 @@ class ReminderHistory : AppCompatActivity() {
                                     .build()
                             db.reminderDao().delete(selectedReminder.uid!!)
                         }
+                        //cancel reminder
+                        cancelReminder(
+                                applicationContext,
+                                selectedReminder.uid!!
+                        )
 
 
                         //refresh reminder list
@@ -79,10 +85,6 @@ class ReminderHistory : AppCompatActivity() {
                                 getString(R.string.sharedPreference),
                                 Context.MODE_PRIVATE
                         ).edit().putString("name", selectedReminder.name).apply()
-                        applicationContext.getSharedPreferences(
-                                getString(R.string.sharedPreference),
-                                Context.MODE_PRIVATE
-                        ).edit().putString("time", selectedReminder.time).apply()
                         applicationContext.getSharedPreferences(
                                 getString(R.string.sharedPreference),
                                 Context.MODE_PRIVATE
@@ -184,7 +186,30 @@ class ReminderHistory : AppCompatActivity() {
 
          }
 
-        @SuppressLint("ServiceCast")
+        fun setReminderWithWorkManager(
+                context: Context,
+                uid: Int,
+                timeInMillis: Long,
+                message: String
+        ) {
+            val reminderParameters = Data.Builder()
+                    .putString("message", message)
+                    .putInt("uid", uid)
+                    .build()
+
+            // get minutes from now until reminder
+            var minutesFromNow = 0L
+            if (timeInMillis > System.currentTimeMillis())
+                minutesFromNow = timeInMillis - System.currentTimeMillis()
+
+            val reminderRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                    .setInputData(reminderParameters)
+                    .setInitialDelay(minutesFromNow, TimeUnit.MILLISECONDS)
+                    .build()
+
+            WorkManager.getInstance(context).enqueue(reminderRequest)
+        }
+
         fun setRemnder(context: Context, uid: Int, timeInMillis: Long, message: String) {
             val intent = Intent(context, ReminderReceiver::class.java)
             intent.putExtra("uid", uid)
@@ -212,9 +237,6 @@ class ReminderHistory : AppCompatActivity() {
                     )
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
-        }
-        fun getListItem(context: Context, reminderInf: List<ReminderInfo>?, uid: Int): Any {
-                return reminderInf!![uid]
         }
     }
 }
