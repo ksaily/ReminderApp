@@ -60,13 +60,16 @@
         android:id="@+id/btnAcceptEdit"
         android:layout_width="171dp"
         android:layout_height="58dp"
+        android:layout_marginBottom="204dp"
         android:background="@drawable/round_button"
         android:padding="5dp"
         android:text="Edit Reminder"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reminderEditDate"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView5"

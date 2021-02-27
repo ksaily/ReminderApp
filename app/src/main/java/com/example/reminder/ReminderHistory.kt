@@ -10,19 +10,25 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
-import androidx.work.OneTimeWorkRequestBuilder
 import java.util.concurrent.TimeUnit
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.room.Room
-import androidx.work.Data
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.reminder.databinding.ActivityReminderHistoryBinding
+import com.example.reminder.databinding.ActivityReminderListviewBinding
+import com.example.reminder.databinding.ActivityReminderListviewBinding.*
 import kotlin.random.Random
 
 class ReminderHistory : AppCompatActivity() {
@@ -31,8 +37,8 @@ class ReminderHistory : AppCompatActivity() {
     private lateinit var listView: ListView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityReminderHistoryBinding.inflate(layoutInflater)
-        val view =binding.root
+        /*binding = ActivityReminderHistoryBinding.inflate(layoutInflater)
+        val view = binding.root
         setContentView(view)
 
         listView = binding.historyListView
@@ -134,57 +140,57 @@ class ReminderHistory : AppCompatActivity() {
                 if (reminderInfos.isNotEmpty()) {
                     val adaptor = ReminderAdaptor(applicationContext, reminderInfos)
                     listView.adapter = adaptor
-                } else {
-                    listView.adapter = null
-                    val text = "You have no reminders"
-                    val duration = Toast.LENGTH_LONG
-
-                    val toast = Toast.makeText(applicationContext, text, duration)
-                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-                    toast.show()
-
-
                 }
-            }
-        }
+            } else {
+                listView.adapter = null
+                val text = "You have no reminders"
+                val duration = Toast.LENGTH_LONG
 
+                val toast = Toast.makeText(applicationContext, text, duration)
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+                toast.show()
+
+
+            }
+        }*/
     }
 
+
     companion object {
-         //val List = mutableListOf<ReminderInfo>()
-         @SuppressLint("ServiceCast")
-         fun showNofitication(context: Context, message: String) {
+        //val List = mutableListOf<ReminderInfo>()
+        @SuppressLint("ServiceCast")
+        fun showNofitication(context: Context, message: String) {
 
-             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
-             var notificationId = Random.nextInt(10, 1000) + 5
-             // notificationId += Random(notificationId).nextInt(1, 500)
+            val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
+            var notificationId = Random.nextInt(10, 1000) + 5
+            // notificationId += Random(notificationId).nextInt(1, 500)
 
-             var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-                     .setSmallIcon(R.drawable.ic_reminder_icon)
-                     .setContentTitle(context.getString(R.string.app_name))
-                     .setContentText(message)
-                     .setStyle(NotificationCompat.BigTextStyle().bigText(message))
-                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                     .setGroup(CHANNEL_ID)
+            var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_reminder_icon)
+                    .setContentTitle(context.getString(R.string.app_name))
+                    .setContentText(message)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setGroup(CHANNEL_ID)
 
-             val notificationManager =
-                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-             // Notification chancel needed since Android 8
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                 val channel = NotificationChannel(
-                         CHANNEL_ID,
-                         context.getString(R.string.app_name),
-                         NotificationManager.IMPORTANCE_DEFAULT
-                 ).apply {
-                     description = context.getString(R.string.app_name)
-                 }
-                 notificationManager.createNotificationChannel(channel)
-             }
+            // Notification chancel needed since Android 8
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                        CHANNEL_ID,
+                        context.getString(R.string.app_name),
+                        NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = context.getString(R.string.app_name)
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
 
-             notificationManager.notify(notificationId, notificationBuilder.build())
+            notificationManager.notify(notificationId, notificationBuilder.build())
 
-         }
+        }
 
         fun setReminderWithWorkManager(
                 context: Context,
@@ -207,8 +213,12 @@ class ReminderHistory : AppCompatActivity() {
                     .setInitialDelay(minutesFromNow, TimeUnit.MILLISECONDS)
                     .build()
 
-            WorkManager.getInstance(context).enqueue(reminderRequest)
+            val isFinished = WorkManager.getInstance(context).enqueue(reminderRequest)
+            //isFinished.State.SUCCESS
+
         }
+
+
 
         fun setRemnder(context: Context, uid: Int, timeInMillis: Long, message: String) {
             val intent = Intent(context, ReminderReceiver::class.java)

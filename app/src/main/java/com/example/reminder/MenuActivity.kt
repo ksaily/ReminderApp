@@ -12,8 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room.databaseBuilder
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.example.reminder.databinding.ActivityMenuBinding
 
 
@@ -118,7 +117,6 @@ class MenuActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         private fun refreshListView() {
             val refreshTask = LoadReminderInfoEntries()
-            refreshTask.get()
             refreshTask.execute()
 
         }
@@ -143,9 +141,10 @@ class MenuActivity : AppCompatActivity() {
                 if (reminderInfos != null) {
                     if (reminderInfos.isNotEmpty()) {
                         val adaptor = ReminderAdaptor(applicationContext, reminderInfos)
+
                         listView.adapter = adaptor
+                        }
                     } else {
-                        listView.adapter = null
                         val text = "You have no reminders that have occurred"
                         val duration = Toast.LENGTH_LONG
 
@@ -153,10 +152,9 @@ class MenuActivity : AppCompatActivity() {
                         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
                         toast.show()
 
-
                     }
                 }
             }
 
     }
-}
+
