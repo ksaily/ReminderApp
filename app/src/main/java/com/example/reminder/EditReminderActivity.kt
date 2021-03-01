@@ -49,7 +49,7 @@ TimePickerDialog.OnTimeSetListener {
         ).getString("date","")
         //show these to the user
         binding.reminderEditInfo.setText(name2)
-        binding.reminderEditDate.setText(date2)
+        //binding.reminderEditDate.setText(date2)
         //hide keyboard when the dateTextBox is clicked
         binding.reminderEditDate.inputType = InputType.TYPE_NULL
         binding.reminderEditDate.isClickable = true
@@ -132,14 +132,14 @@ TimePickerDialog.OnTimeSetListener {
 
             AsyncTask.execute {
                 //update reminder to room database and the notification
-                ReminderHistory.cancelReminder(
-                    applicationContext,
-                    uid
-                )
                 if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
                     // event happens in the future set reminder
                     val message =
                         "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}"
+                    ReminderHistory.cancelReminder(
+                            applicationContext,
+                            uid
+                    )
                     ReminderHistory.setReminderWithWorkManager(
                         applicationContext,
                         uid,

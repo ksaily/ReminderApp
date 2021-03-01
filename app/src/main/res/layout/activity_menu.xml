@@ -87,21 +87,4 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/FutureReminders"
-        android:layout_width="130dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/round_button"
-        android:text="Future reminders"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/addReminder"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.718" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

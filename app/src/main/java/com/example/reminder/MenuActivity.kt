@@ -43,10 +43,7 @@ class MenuActivity : AppCompatActivity() {
             val profileIntent = Intent(applicationContext,ProfileScreen::class.java)
             startActivity(profileIntent)
         }
-        binding.FutureReminders.setOnClickListener {
-            val futureReminderIntent = Intent(applicationContext, ReminderHistory::class.java)
-            startActivity(futureReminderIntent)
-        }
+
 
             listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, id ->
                 //retrieve selected reminder
@@ -118,7 +115,6 @@ class MenuActivity : AppCompatActivity() {
         private fun refreshListView() {
             val refreshTask = LoadReminderInfoEntries()
             refreshTask.execute()
-
         }
 
         @Suppress("DEPRECATION")

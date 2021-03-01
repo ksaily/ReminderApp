@@ -213,8 +213,11 @@ class ReminderHistory : AppCompatActivity() {
                     .setInitialDelay(minutesFromNow, TimeUnit.MILLISECONDS)
                     .build()
 
-            val isFinished = WorkManager.getInstance(context).enqueue(reminderRequest)
-            //isFinished.State.SUCCESS
+            WorkManager.getInstance(context).enqueue(reminderRequest)
+            //val isFinished = WorkManager.getInstance(context).getWorkInfoById(reminderRequest.id)
+            //       .isDone
+            //if (isFinished.equals(true)) {
+
 
         }
 

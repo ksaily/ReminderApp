@@ -23,21 +23,27 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
         var rowBinding = ActivityReminderListviewBinding.inflate(inflater, container, false)
         reminderCalendar = GregorianCalendar.getInstance()
 
+        val dateparts = list!![position].date.split(" ").toTypedArray()[0].split(".").toTypedArray()
+        reminderCalendar.set(Calendar.YEAR, dateparts[2].toInt())
+        reminderCalendar.set(Calendar.MONTH, dateparts[1].toInt() - 1)
+        reminderCalendar.set(Calendar.DAY_OF_MONTH, dateparts[0].toInt())
 
         if (list!![position].date.contains(":")) {
             //if the date contains time reminder
-            val dateparts = list[position].date.split(" ").toTypedArray()[0].split(".").toTypedArray()
+            //val dateparts = list[position].date.split(" ").toTypedArray()[0].split(".").toTypedArray()
             val timeparts = list[position].date.split(" ").toTypedArray()[1].split(":").toTypedArray()
-            reminderCalendar.set(Calendar.YEAR, dateparts[2].toInt())
-            reminderCalendar.set(Calendar.MONTH, dateparts[1].toInt() - 1)
+            /*reminderCalendar.set(Calendar.YEAR, dateparts[2].toInt())
+            reminderCalendar.set(Calendar.MONTH, dateparts[1].toInt() - 1)*/
             reminderCalendar.set(Calendar.DAY_OF_MONTH, dateparts[0].toInt())
             reminderCalendar.set(Calendar.HOUR_OF_DAY, timeparts[0].toInt())
             reminderCalendar.set(Calendar.MINUTE, timeparts[1].toInt())
+
+
             if (reminderCalendar.timeInMillis > System.currentTimeMillis()) {
                 //if time is in the future, dont add these reminders to rowbinding
             }
             else {
-                //if time has passed
+                //if the reminder time has passed
                 rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
             }
