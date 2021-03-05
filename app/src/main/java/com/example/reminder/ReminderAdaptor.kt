@@ -38,7 +38,6 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
             reminderCalendar.set(Calendar.HOUR_OF_DAY, timeparts[0].toInt())
             reminderCalendar.set(Calendar.MINUTE, timeparts[1].toInt())
 
-
             if (reminderCalendar.timeInMillis > System.currentTimeMillis()) {
                 //if time is in the future, dont add these reminders to rowbinding
             }
@@ -48,10 +47,16 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
                 rowBinding.ReminderDate.text = list[position].date
             }
         }
+            if (list!![position].lat != 0.0 && list!![position].lon != 0.0) {
+                rowBinding.ReminderInfo.text = list[position].name
+                rowBinding.ReminderDate.text = list[position].date
+                rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
+
+            }
             else {
                 //set reminder info values to the list item
                 rowBinding.ReminderInfo.text = list!![position].name
-                rowBinding.ReminderDate.text = list[position].date
+                rowBinding.ReminderDate.text = list!![position].date
             }
         return rowBinding.root
     }

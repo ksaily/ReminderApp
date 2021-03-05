@@ -35,124 +35,9 @@ class ReminderHistory : AppCompatActivity() {
 
     private lateinit var binding: ActivityReminderHistoryBinding
     private lateinit var listView: ListView
+    private lateinit var reminderParameters: WorkerParameters
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*binding = ActivityReminderHistoryBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        listView = binding.historyListView
-
-        //update userInterface
-        refreshListView()
-
-        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, id ->
-            //retrieve selected reminder
-
-            val selectedReminder = listView.adapter.getItem(position) as ReminderInfo
-            val message =
-                    "Do you want to delete or edit ${selectedReminder.name} reminder, Date (and time): ${selectedReminder.date} ?"
-            // Show AlertDialog to delete the reminder
-            val builder = AlertDialog.Builder(this@ReminderHistory)
-            builder.setTitle("Delete or edit reminder?")
-                    .setMessage(message)
-                    .setPositiveButton("Delete") { _, _ ->
-                        // Update UI
-
-
-                        //delete from database
-                        AsyncTask.execute {
-                            val db = Room.databaseBuilder(
-                                    applicationContext,
-                                    AppDatabase::class.java,
-                                    "com.example.reminder"
-                            )
-                                    .build()
-                            db.reminderDao().delete(selectedReminder.uid!!)
-                        }
-                        //cancel reminder
-                        cancelReminder(
-                                applicationContext,
-                                selectedReminder.uid!!
-                        )
-
-
-                        //refresh reminder list
-                        refreshListView()
-                    }
-                    //set the edit button
-                    .setNegativeButton("Edit") { _, _ ->
-                        //save the information of selected reminder to shared preferences
-                        applicationContext.getSharedPreferences(
-                                getString(R.string.sharedPreference),
-                                Context.MODE_PRIVATE
-                        ).edit().putInt("UID", selectedReminder.uid!!).apply()
-                        applicationContext.getSharedPreferences(
-                                getString(R.string.sharedPreference),
-                                Context.MODE_PRIVATE
-                        ).edit().putString("name", selectedReminder.name).apply()
-                        applicationContext.getSharedPreferences(
-                                getString(R.string.sharedPreference),
-                                Context.MODE_PRIVATE
-                        ).edit().putString("date", selectedReminder.date).apply()
-
-                        val reminderEditIntent = Intent(applicationContext, EditReminderActivity::class.java)
-                        startActivity(reminderEditIntent)
-                    }
-                    .setNeutralButton("Cancel") { dialog, _ ->
-                        // Do nothing
-                        dialog.dismiss()
-                    }
-                    .show()
-
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshListView()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun refreshListView() {
-        val refreshTask = LoadReminderInfoEntries()
-        refreshTask.execute()
-    }
-
-    @Suppress("DEPRECATION")
-    inner class LoadReminderInfoEntries : AsyncTask<String?, String?, List<ReminderInfo>>() {
-        override fun doInBackground(vararg params: String?): List<ReminderInfo> {
-            val db = Room.databaseBuilder(
-                    applicationContext,
-                    AppDatabase::class.java,
-                    "com.example.reminder"
-            )
-                    .build()
-            val reminderInfos = db.reminderDao().getReminderInfos()
-            db.close()
-            return reminderInfos
-        }
-
-        @Suppress("DEPRECATION")
-        override fun onPostExecute(reminderInfos: List<ReminderInfo>?) {
-            super.onPostExecute(reminderInfos)
-            if (reminderInfos != null) {
-                if (reminderInfos.isNotEmpty()) {
-                    val adaptor = ReminderAdaptor(applicationContext, reminderInfos)
-                    listView.adapter = adaptor
-                }
-            } else {
-                listView.adapter = null
-                val text = "You have no reminders"
-                val duration = Toast.LENGTH_LONG
-
-                val toast = Toast.makeText(applicationContext, text, duration)
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-                toast.show()
-
-
-            }
-        }*/
     }
 
 
@@ -163,7 +48,7 @@ class ReminderHistory : AppCompatActivity() {
 
             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
             var notificationId = Random.nextInt(10, 1000) + 5
-            // notificationId += Random(notificationId).nextInt(1, 500)
+            notificationId += Random(notificationId).nextInt(1, 500)
 
             var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_reminder_icon)
@@ -196,11 +81,17 @@ class ReminderHistory : AppCompatActivity() {
                 context: Context,
                 uid: Int,
                 timeInMillis: Long,
+                location_lat: Double,
+                location_lon: Double,
+                within_range: Boolean,
                 message: String
         ) {
             val reminderParameters = Data.Builder()
                     .putString("message", message)
                     .putInt("uid", uid)
+                    .putDouble("lat", location_lat)
+                    .putDouble("lon", location_lon)
+                    .putBoolean("within_range", within_range)
                     .build()
 
             // get minutes from now until reminder
