@@ -40,23 +40,27 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
 
             if (reminderCalendar.timeInMillis > System.currentTimeMillis()) {
                 //if time is in the future, dont add these reminders to rowbinding
-            }
-            else {
+            } else {
                 //if the reminder time has passed
                 rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
+                if (list!![position].lat != 0.0 && list!![position].lon != 0.0) {
+                    rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
+
+                }
             }
         }
-            if (list!![position].lat != 0.0 && list!![position].lon != 0.0) {
+        if (reminderCalendar.timeInMillis > System.currentTimeMillis()) {
+            //if date is in the future, dont add these reminders to rowbiding
+        }
+        else {
+            if (list[position].lat != 0.0 && list[position].lon != 0.0) {
+                    rowBinding.ReminderInfo.text = list[position].name
+                    rowBinding.ReminderDate.text = list[position].date
+                    rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
+                }
                 rowBinding.ReminderInfo.text = list[position].name
                 rowBinding.ReminderDate.text = list[position].date
-                rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
-
-            }
-            else {
-                //set reminder info values to the list item
-                rowBinding.ReminderInfo.text = list!![position].name
-                rowBinding.ReminderDate.text = list!![position].date
             }
         return rowBinding.root
     }

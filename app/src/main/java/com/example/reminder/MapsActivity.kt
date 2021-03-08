@@ -37,7 +37,7 @@ import com.google.firebase.ktx.Firebase
 import java.io.Serializable
 import kotlin.random.Random
 
-const val GEOFENCE_RADIUS = 200
+const val GEOFENCE_RADIUS = 500
 const val GEOFENCE_ID = "REMINDER_GEOFENCE_ID"
 const val GEOFENCE_EXPIRATION = 10 * 24 * 60 * 60 * 1000 // 10 days
 const val GEOFENCE_DWELL_DELAY =  10 * 1000 // 10 secs // 2 minutes
@@ -185,8 +185,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     getString(R.string.sharedPreference),
                     Context.MODE_PRIVATE
             ).edit().putString("lon", latlng.longitude.toString()).apply()
-            val reminderActivityIntent = Intent(applicationContext, ReminderActivity::class.java)
-            startActivity(reminderActivityIntent)
+            finish()
         }
     }
 
@@ -206,7 +205,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val intent = Intent(this, ReminderReceiver::class.java)
             .putExtra("key", key)
-            .putExtra("message", "Geofence alert - ${location.latitude}, ${location.longitude}")
+            .putExtra("message", "Geofence alert")
+                .putExtra("lat", location.latitude)
+                .putExtra("lon", location.longitude)
 
         val pendingIntent = PendingIntent.getBroadcast(
             applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT

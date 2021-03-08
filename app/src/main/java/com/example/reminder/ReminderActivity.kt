@@ -138,7 +138,6 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
 
             AsyncTask.execute {
-                onLocationSet(key, lat, lng)
                 //save reminder to room database
                 val db = databaseBuilder(
                         applicationContext,
@@ -188,12 +187,22 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                         Toast.LENGTH_SHORT
                 ).show()
             }
+            applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).edit().putString("KEY", "").apply()
+            applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).edit().putString("lat", "").apply()
+            applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).edit().putString("lon", "").apply()
 
             finish()
 
             //return to menu screen
-            val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
-            startActivity(menuActivityIntent)
         }
     }
 
@@ -250,8 +259,13 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 getString(R.string.sharedPreference),
                 Context.MODE_PRIVATE
         ).getString("lon", "")
-        reminder = Reminder(key!!, lat!!.toDouble(), lon!!.toDouble())
-        onLocationSet(reminder.key, reminder.lat, reminder.lon)
+        if (key != "") {
+            println(lat)
+            println(lon)
+            reminder = Reminder(key!!, lat!!.toDouble(), lon!!.toDouble())
+            onLocationSet(reminder.key, reminder.lat, reminder.lon)
+        }
+        println("no location set")
     }
 
 }
