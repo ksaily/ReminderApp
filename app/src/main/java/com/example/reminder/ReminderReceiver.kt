@@ -26,23 +26,23 @@ class ReminderReceiver : BroadcastReceiver(){
 
         // Retrieve data from intent
         if (intent != null) {
-            val uid = intent?.getIntExtra("uid", 0)
-            val text = intent?.getStringExtra("message")
-            val key = intent?.getStringExtra("key")
-            val lat = intent?.getStringExtra("lat")
-            val lon = intent?.getStringExtra("lon")
+            val uid = intent.getIntExtra("uid", 0)
+            val text = intent.getStringExtra("message")
+            val key = intent.getStringExtra("key")
+            val lat = intent.getStringExtra("lat")
+            val lon = intent.getStringExtra("lon")
         }
 
         if (context != null) {
             if (key == "") {
-                ReminderHistory.showNotification(context!!, text!!)
+                ReminderHistory.showNotification(context!!, text!!, key, lat.toDouble(), lon.toDouble())
             }
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
             val geofencingTransition = geofencingEvent.geofenceTransition
 
             if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_ENTER || geofencingTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
 
-                val firebase = Firebase.database
+                val firebase = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
                 val reference = firebase.getReference("reminders")
                 val reminderListener = object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -50,15 +50,14 @@ class ReminderReceiver : BroadcastReceiver(){
                         if (reminder != null) {
                             Log.d("ReminderReceiver", "Entered geofence area")
                             if (reminder.reminder_seen) {
-                                ReminderHistory.showNotification(context, text!!)
+                                ReminderHistory.showNotification(context, text, key, reminder.lat, reminder.lon)
+                                }
                             }
                         }
-                    }
 
                     override fun onCancelled(error: DatabaseError) {
                         println("reminder:onCancelled: ${error.details}")
                     }
-
                 }
                 val child = reference.child(key)
                 child.addValueEventListener(reminderListener)

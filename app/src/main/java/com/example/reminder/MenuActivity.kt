@@ -44,6 +44,11 @@ class MenuActivity : AppCompatActivity() {
             startActivity(profileIntent)
         }
 
+        binding.VirtualLocation.setOnClickListener {
+            val virtualLocationIntent = Intent(applicationContext, VirtualLocationActivity::class.java)
+            startActivity(virtualLocationIntent)
+        }
+
 
             listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, id ->
                 //retrieve selected reminder
@@ -63,7 +68,8 @@ class MenuActivity : AppCompatActivity() {
                         AsyncTask.execute {
                             ReminderHistory.cancelReminder(
                                     applicationContext,
-                                    selectedReminder.uid!!
+                                    selectedReminder.uid!!,
+                                selectedReminder.key
                             )
                             val db = databaseBuilder(
                                     applicationContext,
@@ -72,6 +78,7 @@ class MenuActivity : AppCompatActivity() {
                                 )
                                 .build()
                             db.reminderDao().delete(selectedReminder.uid!!)
+
                         }
 
 

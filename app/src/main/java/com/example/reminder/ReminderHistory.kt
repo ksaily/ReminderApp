@@ -7,9 +7,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,6 +31,11 @@ import androidx.work.*
 import com.example.reminder.databinding.ActivityReminderHistoryBinding
 import com.example.reminder.databinding.ActivityReminderListviewBinding
 import com.example.reminder.databinding.ActivityReminderListviewBinding.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import kotlin.random.Random
 
 class ReminderHistory : AppCompatActivity() {
@@ -42,39 +49,48 @@ class ReminderHistory : AppCompatActivity() {
 
 
     companion object {
+        var virtual_lat = 0.0
+        var virtual_lon = 0.0
         //val List = mutableListOf<ReminderInfo>()
         @SuppressLint("ServiceCast")
-        fun showNotification(context: Context, message: String) {
+        fun showNotification(context: Context, message: String, key: String, lat: Double, lon: Double) {
 
             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
             var notificationId = Random.nextInt(10, 1000) + 5
             notificationId += Random(notificationId).nextInt(1, 500)
 
             var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_reminder_icon)
-                    .setContentTitle(context.getString(R.string.app_name))
-                    .setContentText(message)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(message))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setGroup(CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_reminder_icon)
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentText(message)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setGroup(CHANNEL_ID)
 
             val notificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             // Notification chancel needed since Android 8
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(
-                        CHANNEL_ID,
-                        context.getString(R.string.app_name),
-                        NotificationManager.IMPORTANCE_DEFAULT
+                    CHANNEL_ID,
+                    context.getString(R.string.app_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
                 ).apply {
                     description = context.getString(R.string.app_name)
                 }
                 notificationManager.createNotificationChannel(channel)
             }
 
-            notificationManager.notify(notificationId, notificationBuilder.build())
+            if (key != "") {
+                val results = floatArrayOf()
+                Location.distanceBetween(virtual_lat, virtual_lon, lat, lon, results)
+                if (results[0] <= GEOFENCE_RADIUS) {
+                    notificationManager.notify(notificationId, notificationBuilder.build())
+                }
+            }
 
+            notificationManager.notify(notificationId, notificationBuilder.build())
         }
 
         fun setReminderWithWorkManager(
@@ -129,7 +145,7 @@ class ReminderHistory : AppCompatActivity() {
 
         }
 
-        fun cancelReminder(context: Context, pendingIntentId: Int) {
+        fun cancelReminder(context: Context, pendingIntentId: Int, key: String) {
 
             val intent = Intent(context, ReminderReceiver::class.java)
             val pendingIntent =
@@ -141,6 +157,9 @@ class ReminderHistory : AppCompatActivity() {
                     )
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
+            val database = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
+            val reference = database.getReference("reminders")
+            reference.child("reminders").child(key).removeValue()
         }
     }
 }

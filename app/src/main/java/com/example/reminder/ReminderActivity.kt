@@ -42,9 +42,9 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
     private lateinit var binding: ActivityReminderBinding
     private lateinit var reminderCalendar: Calendar
-    var key: String=""
-    var lat: Double = 0.0
-    var lng: Double = 0.0
+    var key=""
+    var lat=0.0
+    var lon=0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -61,11 +61,11 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         binding.reminderAddDate.setOnClickListener {
             reminderCalendar = GregorianCalendar.getInstance()
             DatePickerDialog(
-                    this,
-                    this,
-                    reminderCalendar.get(Calendar.YEAR),
-                    reminderCalendar.get(Calendar.MONTH),
-                    reminderCalendar.get(Calendar.DAY_OF_MONTH)
+                this,
+                this,
+                reminderCalendar.get(Calendar.YEAR),
+                reminderCalendar.get(Calendar.MONTH),
+                reminderCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
@@ -74,47 +74,55 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             startActivity(mapsIntent)
         }
 
+        if (intent.hasExtra("key")) {
+            var lat = intent.getDoubleExtra("lat", 0.0)
+            var lon = intent.getDoubleExtra("lon", 0.0)
+            var key = intent.getStringExtra("key")
+            onLocationSet(key!!, lat, lon)
+            Log.d("ReminderActivity", "saved lon: $lon, lat: $lat, key: $key")
+
+        }
+
+
         binding.btnAccept.setOnClickListener {
             //validate entry values here
             if (binding.reminderAddDate.text.isEmpty()) {
                 Toast.makeText(
-                        applicationContext,
-                        "Date field should not be empty",
-                        Toast.LENGTH_SHORT
+                    applicationContext,
+                    "Date field should not be empty",
+                    Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
             }
 
-            var key = applicationContext.getSharedPreferences(
-                getString(R.string.sharedPreference),
-                Context.MODE_PRIVATE
-            ).getString("KEY", "")
 
-
-            if (key != "") {
-                val database = Firebase.database
+            /*if (key != "") {
+                val database = Firebase.database(getString(R.string.firebase_database))
                 val reference = database.getReference("reminders")
                 reference.child(key!!).get().addOnSuccessListener {
                     val reminder = it.getValue<Reminder>()
-                    lng = reminder!!.lon
+                    lon = reminder!!.lon
                     lat = reminder!!.lat
+                    Log.d("ReminderActivity", "saved lon: $lng, lat: $lat")
+                    onLocationSet(key, lng, lat)
                 }.addOnFailureListener {
                     Log.e("firebase", "Error getting data", it)
                 }
-            }
+            }*/
 
             val reminderInfo = ReminderInfo(
-                    null,
-                    name = binding.reminderAddInfo.text.toString(),
-                    date = binding.reminderAddDate.text.toString(),
-                    key = key,
-                    lat = lat,
-                    lon = lng,
-                    creation_time = Calendar.getInstance().timeInMillis,
+                null,
+                name = binding.reminderAddInfo.text.toString(),
+                date = binding.reminderAddDate.text.toString(),
+                key,
+                lat,
+                lon,
+                creation_time = Calendar.getInstance().timeInMillis,
             )
 
             val reminderCalendar2 = GregorianCalendar.getInstance()
-            val dateFormat = "dd.MM.yyyy HH:mm" // change this format to dd.MM.yyyy if you have not time in your date.
+            val dateFormat =
+                "dd.MM.yyyy HH:mm" // change this format to dd.MM.yyyy if you have not time in your date.
             // a better way of handling dates but requires API version 26 (Build.VERSION_CODES.O)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val formatter = DateTimeFormatter.ofPattern(dateFormat)
@@ -129,8 +137,10 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             } else {
                 if (dateFormat.contains(":")) {
                     // if your date contains hours and minutes and its in the format dd.mm.yyyy HH:mm
-                    val dateparts = reminderInfo.date.split(" ").toTypedArray()[0].split(".").toTypedArray()
-                    val timeparts = reminderInfo.date.split(" ").toTypedArray()[1].split(":").toTypedArray()
+                    val dateparts =
+                        reminderInfo.date.split(" ").toTypedArray()[0].split(".").toTypedArray()
+                    val timeparts =
+                        reminderInfo.date.split(" ").toTypedArray()[1].split(":").toTypedArray()
 
                     reminderCalendar2.set(Calendar.YEAR, dateparts[2].toInt())
                     reminderCalendar2.set(Calendar.MONTH, dateparts[1].toInt() - 1)
@@ -149,67 +159,59 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                     reminderCalendar2.set(Calendar.DAY_OF_MONTH, dateparts[0].toInt())
                 }
             }
-
-
             AsyncTask.execute {
+
                 //save reminder to room database
                 val db = databaseBuilder(
-                        applicationContext,
-                        AppDatabase::class.java,
-                        "com.example.reminder"
+                    applicationContext,
+                    AppDatabase::class.java,
+                    "com.example.reminder"
                 ).build()
                 val uuid = db.reminderDao().insert(reminderInfo).toInt()
                 db.close()
 
-                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis && reminderInfo.lat != 0.0 && reminderInfo.lon != 0.0) {
+
+                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis && reminderInfo.key != "") {
                     // event happens in the future set reminder
                     val message =
-                            "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}," +
-                                    "Location $lat, $lng reached"
+                        "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}," +
+                                "Location $lat, $lon reached"
                     ReminderHistory.setReminderWithWorkManager(
-                            applicationContext,
-                            uuid,
-                            reminderCalendar.timeInMillis,
-                            key,
-                            lat,
-                            lng,
-                            message
+                        applicationContext,
+                        uuid,
+                        reminderCalendar.timeInMillis,
+                        key,
+                        lat,
+                        lon,
+                        message
+                    )
+                } else if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+                    val message =
+                        "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}"
+
+                    ReminderHistory.setReminderWithWorkManager(
+                        applicationContext,
+                        uuid,
+                        reminderCalendar.timeInMillis,
+                        key,
+                        lat,
+                        lon,
+                        message
                     )
                 }
-                    else if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-                        val message =
-                                "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}"
-
-                        ReminderHistory.setReminderWithWorkManager(
-                                applicationContext,
-                                uuid,
-                                reminderCalendar.timeInMillis,
-                                key,
-                                lat,
-                                lng,
-                                message
-                        )
-                    }
-
-
-                }
+            }
 
             if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
                 Toast.makeText(
-                        applicationContext,
-                        "Reminder for future saved.",
-                        Toast.LENGTH_SHORT
+                    applicationContext,
+                    "Reminder for future saved.",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
-            applicationContext.getSharedPreferences(
-                    getString(R.string.sharedPreference),
-                    Context.MODE_PRIVATE
-            ).edit().putString("KEY", "").apply()
 
-            finish()
+            startActivity(Intent(applicationContext, MenuActivity::class.java))
 
-            //return to menu screen
-        }
+        }    //return to menu screen
     }
 
     override fun onDateSet(

@@ -11,19 +11,20 @@
 
     <ImageView
         android:id="@+id/addReminder"
-        android:layout_width="99dp"
-        android:layout_height="93dp"
+        android:layout_width="108dp"
+        android:layout_height="103dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="5dp"
         android:contentDescription="AddReminder"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.714"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        app:tint="#451767" />
 
     <TextView
         android:id="@+id/textView20"
@@ -54,6 +55,7 @@
         android:layout_marginBottom="5dp"
         android:contentDescription="seeProfile"
         android:padding="5dp"
+        app:tint="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addReminder"
         app:layout_constraintHorizontal_bias="0.866"
@@ -61,6 +63,24 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.75"
         app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <ImageView
+        android:id="@+id/VirtualLocation"
+        android:layout_width="94dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toEndOf="@+id/addReminder"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/ic_baseline_my_location_24"
+        app:tint="@color/purple_200" />
 
     <LinearLayout
         android:id="@+id/linearLayout"

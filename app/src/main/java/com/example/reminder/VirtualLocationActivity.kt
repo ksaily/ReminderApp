@@ -37,33 +37,26 @@ import com.google.firebase.ktx.Firebase
 import java.io.Serializable
 import kotlin.random.Random
 
-const val GEOFENCE_RADIUS = 500
-const val GEOFENCE_ID = "REMINDER_GEOFENCE_ID"
-const val GEOFENCE_EXPIRATION = 10 * 24 * 60 * 60 * 1000 // 10 days
-const val GEOFENCE_DWELL_DELAY =  10 * 1000 // 10 secs // 2 minutes
-const val GEOFENCE_LOCATION_REQUEST_CODE = 12345
-const val CAMERA_ZOOM_LEVEL = 13f
-const val LOCATION_REQUEST_CODE = 123
-private val TAG: String = MapsActivity::class.java.simpleName
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+private val TAG: String = VirtualLocationActivity::class.java.simpleName
+
+class VirtualLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var geofencingClient: GeofencingClient
     lateinit var reminderInfo: ReminderInfo
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
+        setContentView(R.layout.activity_virtual_location)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        geofencingClient = LocationServices.getGeofencingClient(this)
     }
 
 
@@ -82,10 +75,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             }
-            ActivityCompat.requestPermissions(
-                this,
-                permissions.toTypedArray(),
-                LOCATION_REQUEST_CODE
+            ActivityCompat.requestPermissions(this, permissions.toTypedArray(),
+                GEOFENCE_LOCATION_REQUEST_CODE
             )
         } else {
 
@@ -158,75 +149,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .fillColor(Color.argb(70, 150, 150, 150))
                     .radius(GEOFENCE_RADIUS.toDouble())
             )
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, CAMERA_ZOOM_LEVEL))
 
-            val database = Firebase.database(getString(R.string.firebase_database))
+            val database = Firebase.database
             val reference = database.getReference("reminders")
             val key = reference.push().key
             if (key != null) {
                 val reminder = Reminder(key, latlng.latitude, latlng.longitude, reminder_seen=false)
                 reference.child(key).setValue(reminder)
             }
-            createGeoFence(latlng, key!!, geofencingClient)
             Toast.makeText(
-                    this,
-                    "Location added: lat: ${latlng.latitude}, long: ${latlng.longitude}",
-                    Toast.LENGTH_LONG
+                this,
+                "Virtual location set: lat: ${latlng.latitude}, long: ${latlng.longitude}",
+                Toast.LENGTH_LONG
             ).show()
 
-            val keyIntent = Intent(this, ReminderActivity::class.java)
-                .putExtra("key", key)
-                .putExtra("lat", latlng.latitude)
-                .putExtra("lon", latlng.longitude)
-            startActivity(keyIntent)
+            ReminderHistory.virtual_lat = latlng.latitude
+            ReminderHistory.virtual_lon = latlng.longitude
 
             finish()
         }
     }
 
-    private fun createGeoFence(location: LatLng, key: String, geofencingClient: GeofencingClient) {
-        val geofence = Geofence.Builder()
-            .setRequestId(GEOFENCE_ID)
-            .setCircularRegion(location.latitude, location.longitude, GEOFENCE_RADIUS.toFloat())
-            .setExpirationDuration(GEOFENCE_EXPIRATION.toLong())
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_DWELL)
-            .setLoiteringDelay(GEOFENCE_DWELL_DELAY)
-            .build()
-
-        val geofenceRequest = GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofence(geofence)
-            .build()
-
-        val intent = Intent(this, ReminderReceiver::class.java)
-            .putExtra("key", key)
-            .putExtra("message", "Geofence alert")
-                .putExtra("lat", location.latitude)
-                .putExtra("lon", location.longitude)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(
-                    applicationContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                    ),
-                    GEOFENCE_LOCATION_REQUEST_CODE
-                )
-            } else {
-                geofencingClient.addGeofences(geofenceRequest, pendingIntent)
-            }
-        } else {
-            geofencingClient.addGeofences(geofenceRequest, pendingIntent)
-        }
-    }
 
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -289,15 +232,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
-    companion object {
-        fun removeGeofences(context: Context, triggeringGeofenceList: MutableList<Geofence>) {
-            val geofenceIdList = mutableListOf<String>()
-            for (entry in triggeringGeofenceList) {
-                geofenceIdList.add(entry.requestId)
-            }
-            LocationServices.getGeofencingClient(context).removeGeofences(geofenceIdList)
-        }
-
-    }
 }

@@ -86,12 +86,12 @@
 
         <TextView
             android:id="@+id/LocationText"
-            android:layout_width="204dp"
+            android:layout_width="266dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|fill"
             android:gravity="left|center_vertical"
             android:text="Empty"
-            android:textSize="20sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

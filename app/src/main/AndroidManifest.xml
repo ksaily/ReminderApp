@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.reminder">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -17,22 +16,23 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAcdj5v7bOMdZvxoHIB4ZWm3VwXcKfpnNc"/>
+            android:value="AIzaSyAcdj5v7bOMdZvxoHIB4ZWm3VwXcKfpnNc" />
 
-        <activity android:name=".ReminderActivity"/>
+        <activity android:name=".VirtualLocationActivity"></activity>
+        <activity android:name=".ReminderActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".EditReminderActivity"/>
-        <activity android:name=".MapsActivity"/>
+        <activity android:name=".EditReminderActivity" />
+        <activity android:name=".MapsActivity" />
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".ReminderReceiver"/>
+
+        <receiver android:name=".ReminderReceiver" />
     </application>
 
 </manifest>

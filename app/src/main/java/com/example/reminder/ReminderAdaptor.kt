@@ -47,16 +47,8 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
                 //if the reminder time has passed
                 rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
-                if (list!![position].key != "") {
+                if (list!![position].lat != 0.0) {
                     rowBinding.LocationText.text = (list!![position].lat.toString() + list[position].lon.toString())
-                    /*
-                    val database = Firebase.database
-                    val reference = database.getReference("reminders")
-                    val reminder = reference.child(list!![position].key).get().addOnSuccessListener {
-                        rowBinding.LocationText.text = (reminder.lat.toString() + reminder.lon.toString())
-                    }.addOnFailureListener{
-                        Log.e("firebase", "Error getting data", it)
-                    }*/
 
                 }
             }
@@ -65,13 +57,11 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
             //if date is in the future, dont add these reminders to rowbiding
         }
         else {
-            if (list[position].key != "") {
-                    rowBinding.ReminderInfo.text = list[position].name
-                    rowBinding.ReminderDate.text = list[position].date
+            rowBinding.ReminderInfo.text = list[position].name
+            rowBinding.ReminderDate.text = list[position].date
+            if (list[position].lat != 0.0) {
                     rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
                 }
-                rowBinding.ReminderInfo.text = list[position].name
-                rowBinding.ReminderDate.text = list[position].date
             }
         return rowBinding.root
     }
