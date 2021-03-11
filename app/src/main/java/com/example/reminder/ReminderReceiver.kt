@@ -14,6 +14,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import java.lang.reflect.Array.get
+import com.example.reminder.ReminderHistory
 
 class ReminderReceiver : BroadcastReceiver(){
     lateinit var key: String
@@ -31,22 +32,15 @@ class ReminderReceiver : BroadcastReceiver(){
             val lat = intent?.getStringExtra("lat")
             val lon = intent?.getStringExtra("lon")
         }
-        println("ReminderReceiver context:")
-        println(context)
-        println("ReminderReceiver intent:")
-        println(intent)
+
         if (context != null) {
+            if (key == "") {
+                ReminderHistory.showNotification(context!!, text!!)
+            }
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
             val geofencingTransition = geofencingEvent.geofenceTransition
 
             if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_ENTER || geofencingTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
-                if (intent != null) {
-                    val uid = intent?.getIntExtra("uid", 0)
-                    val text = intent?.getStringExtra("message")
-                    val key = intent?.getStringExtra("key")
-                    val lat = intent?.getStringExtra("lat")
-                    val lon = intent?.getStringExtra("lon")
-                }
 
                 val firebase = Firebase.database
                 val reference = firebase.getReference("reminders")
@@ -55,7 +49,9 @@ class ReminderReceiver : BroadcastReceiver(){
                         val reminder = snapshot.getValue<Reminder>()
                         if (reminder != null) {
                             Log.d("ReminderReceiver", "Entered geofence area")
-                            reminderInfo.within_area = true
+                            if (reminder.reminder_seen) {
+                                ReminderHistory.showNotification(context, text!!)
+                            }
                         }
                     }
 
@@ -73,11 +69,9 @@ class ReminderReceiver : BroadcastReceiver(){
             }
             if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 Log.d("ReminderReceiver", "Exited geofence area")
-
-                reminderInfo.within_area = false
             }
-
-            ReminderHistory.showNofitication(context!!, text!!)
+            }
         }
     }
-}
+
+

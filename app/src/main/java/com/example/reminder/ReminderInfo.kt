@@ -14,7 +14,6 @@ import androidx.room.PrimaryKey
         @ColumnInfo(name = "key") var key: String="",
         @ColumnInfo(name = "lat") var lat: Double=0.0,
         @ColumnInfo(name = "lon") var lon: Double=0.0,
-        @ColumnInfo(name = "within_area") var within_area: Boolean=false,
         @ColumnInfo(name = "creation_time") var creation_time: Long,
-        @ColumnInfo(name = "reminder_seen") var reminder_seen: String
+        @ColumnInfo(name = "reminder_seen") var reminder_seen: Boolean=false
     )

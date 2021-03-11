@@ -35,6 +35,8 @@ TimePickerDialog.OnTimeSetListener {
     private lateinit var key: String
     var lat: Double = 0.0
     var lng: Double = 0.0
+    private lateinit var reminder: Reminder
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +65,10 @@ TimePickerDialog.OnTimeSetListener {
         binding.reminderEditDate.inputType = InputType.TYPE_NULL
         binding.reminderEditDate.isClickable = true
 
-        onLocationSet(key, lat, lng)
-
+        reminder = Reminder(key, lat, lng)
+        if (key != "") {
+            onLocationSet(reminder.key, reminder.lat, reminder.lon)
+        }
         //show date and time dialog
 
         binding.reminderEditDate.setOnClickListener {
@@ -85,21 +89,25 @@ TimePickerDialog.OnTimeSetListener {
 
 
         binding.btnAcceptEdit.setOnClickListener {
-            val firebase = Firebase.database
-            val reference = firebase.getReference("reminders")
-            val reminderListener = object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val reminder = snapshot.getValue<Reminder>()
-                    if (reminder != null) {
-                        key = reminder.key
-                        lat = reminder.lat
-                        lng = reminder.lon
-                    }
-                }
+            val key = applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).getString("KEY", "")
 
-                override fun onCancelled(error: DatabaseError) {
-                    println("reminder:onCancelled: ${error.details}")
-                }
+            //get the information of reminder
+            val lat = applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).getString("lat", "")!!.toDouble()
+            val lng = applicationContext.getSharedPreferences(
+                    getString(R.string.sharedPreference),
+                    Context.MODE_PRIVATE
+            ).getString("lon", "")!!.toDouble()
+
+            if (key != "") {
+                reminder.key = key!!
+                reminder.lat = lat
+                reminder.lon = lng
             }
             //validate entry values here
             if (binding.reminderEditDate.text.isEmpty()) {
@@ -124,7 +132,6 @@ TimePickerDialog.OnTimeSetListener {
                     lat = lat,
                     lon = lng,
                     creation_time = Calendar.getInstance().timeInMillis,
-                    reminder_seen = "no"
             )
 
             val reminderCalendar2 = GregorianCalendar.getInstance()
@@ -169,7 +176,8 @@ TimePickerDialog.OnTimeSetListener {
                 //update reminder to room database and the notification
                 onLocationSet(key, lat, lng)
 
-                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis && lat != 0.0 && lng != 0.0) {
+                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis &&
+                        reminderInfo.lat != 0.0 && reminderInfo.lon != 0.0) {
                     // event happens in the future set reminder
                     val message =
                             "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}," +
@@ -178,9 +186,9 @@ TimePickerDialog.OnTimeSetListener {
                             applicationContext,
                             uid,
                             reminderCalendar.timeInMillis,
-                            lat,
-                            lng,
-                            reminderInfo.within_area,
+                            reminderInfo.key,
+                            reminderInfo.lat,
+                            reminderInfo.lon,
                             message
                     )
                 } else if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) {
@@ -191,9 +199,9 @@ TimePickerDialog.OnTimeSetListener {
                             applicationContext,
                             uid,
                             reminderCalendar.timeInMillis,
+                            reminderInfo.key,
                             lat,
                             lng,
-                            reminderInfo.within_area,
                             message
                     )
                 }
@@ -213,10 +221,21 @@ TimePickerDialog.OnTimeSetListener {
                     ).show()
 
                 }
-                finish()
+                applicationContext.getSharedPreferences(
+                        getString(R.string.sharedPreference),
+                        Context.MODE_PRIVATE
+                ).edit().putString("KEY", "").apply()
+                applicationContext.getSharedPreferences(
+                        getString(R.string.sharedPreference),
+                        Context.MODE_PRIVATE
+                ).edit().putString("lat", "").apply()
+                applicationContext.getSharedPreferences(
+                        getString(R.string.sharedPreference),
+                        Context.MODE_PRIVATE
+                ).edit().putString("lon", "").apply()
                 //return to menu screen
-                val menuActivityIntent = Intent(applicationContext, MenuActivity::class.java)
-                startActivity(menuActivityIntent)
+                finish()
+
             }
 
         }

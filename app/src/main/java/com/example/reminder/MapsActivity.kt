@@ -303,5 +303,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             LocationServices.getGeofencingClient(context).removeGeofences(geofenceIdList)
         }
+
     }
 }

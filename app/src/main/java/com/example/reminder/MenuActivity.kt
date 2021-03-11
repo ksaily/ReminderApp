@@ -120,7 +120,7 @@ class MenuActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         inner class LoadReminderInfoEntries : AsyncTask<String?, String?, List<ReminderInfo>>() {
             override fun doInBackground(vararg params: String?): List<ReminderInfo> {
-                val db = Room.databaseBuilder(
+                val db = databaseBuilder(
                         applicationContext,
                         AppDatabase::class.java,
                         "com.example.reminder"

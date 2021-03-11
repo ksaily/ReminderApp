@@ -44,7 +44,7 @@ class ReminderHistory : AppCompatActivity() {
     companion object {
         //val List = mutableListOf<ReminderInfo>()
         @SuppressLint("ServiceCast")
-        fun showNofitication(context: Context, message: String) {
+        fun showNotification(context: Context, message: String) {
 
             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
             var notificationId = Random.nextInt(10, 1000) + 5
@@ -81,17 +81,17 @@ class ReminderHistory : AppCompatActivity() {
                 context: Context,
                 uid: Int,
                 timeInMillis: Long,
+                key: String,
                 location_lat: Double,
                 location_lon: Double,
-                within_range: Boolean,
                 message: String
         ) {
             val reminderParameters = Data.Builder()
                     .putString("message", message)
                     .putInt("uid", uid)
+                    .putString("key", key)
                     .putDouble("lat", location_lat)
                     .putDouble("lon", location_lon)
-                    .putBoolean("within_range", within_range)
                     .build()
 
             // get minutes from now until reminder

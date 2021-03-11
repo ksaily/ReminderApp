@@ -1,6 +1,7 @@
 package com.example.reminder
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.work.WorkManager
 import com.example.reminder.ReminderInfo
 import com.example.reminder.databinding.ActivityMenuBinding
 import com.example.reminder.databinding.ActivityReminderListviewBinding
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 
@@ -44,8 +47,16 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
                 //if the reminder time has passed
                 rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
-                if (list!![position].lat != 0.0 && list!![position].lon != 0.0) {
-                    rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
+                if (list!![position].key != "") {
+                    rowBinding.LocationText.text = (list!![position].lat.toString() + list[position].lon.toString())
+                    /*
+                    val database = Firebase.database
+                    val reference = database.getReference("reminders")
+                    val reminder = reference.child(list!![position].key).get().addOnSuccessListener {
+                        rowBinding.LocationText.text = (reminder.lat.toString() + reminder.lon.toString())
+                    }.addOnFailureListener{
+                        Log.e("firebase", "Error getting data", it)
+                    }*/
 
                 }
             }
@@ -54,7 +65,7 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
             //if date is in the future, dont add these reminders to rowbiding
         }
         else {
-            if (list[position].lat != 0.0 && list[position].lon != 0.0) {
+            if (list[position].key != "") {
                     rowBinding.ReminderInfo.text = list[position].name
                     rowBinding.ReminderDate.text = list[position].date
                     rowBinding.LocationText.text = (list!![position].lat.toString() + list!![position].lon.toString())
