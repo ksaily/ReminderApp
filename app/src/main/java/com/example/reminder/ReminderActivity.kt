@@ -42,9 +42,9 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
     private lateinit var binding: ActivityReminderBinding
     private lateinit var reminderCalendar: Calendar
-    var key=""
-    var lat=0.0
-    var lon=0.0
+    private var key=""
+    private var lat=0.0
+    private var lon=0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -75,9 +75,9 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         }
 
         if (intent.hasExtra("key")) {
-            var lat = intent.getDoubleExtra("lat", 0.0)
-            var lon = intent.getDoubleExtra("lon", 0.0)
-            var key = intent.getStringExtra("key")
+            lat = intent.getDoubleExtra("lat", 0.0)
+            lon = intent.getDoubleExtra("lon", 0.0)
+            key = intent.getStringExtra("key")!!
             onLocationSet(key!!, lat, lon)
             Log.d("ReminderActivity", "saved lon: $lon, lat: $lat, key: $key")
 
@@ -171,11 +171,10 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 db.close()
 
 
-                if (reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis && reminderInfo.key != "") {
+                if ((reminderCalendar.timeInMillis > Calendar.getInstance().timeInMillis) && (reminderInfo.key != "")) {
                     // event happens in the future set reminder
                     val message =
-                        "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}," +
-                                "Location $lat, $lon reached"
+                        "Reminder! ${reminderInfo.name}, Date (and time): ${reminderInfo.date}, Location $lat, $lon reached"
                     ReminderHistory.setReminderWithWorkManager(
                         applicationContext,
                         uuid,
@@ -208,6 +207,8 @@ class ReminderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            println("Reminder added: "+ reminderInfo)
 
             startActivity(Intent(applicationContext, MenuActivity::class.java))
 

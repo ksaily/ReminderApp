@@ -32,6 +32,7 @@ import com.example.reminder.databinding.ActivityReminderHistoryBinding
 import com.example.reminder.databinding.ActivityReminderListviewBinding
 import com.example.reminder.databinding.ActivityReminderListviewBinding.*
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -49,11 +50,14 @@ class ReminderHistory : AppCompatActivity() {
 
 
     companion object {
-        var virtual_lat = 0.0
-        var virtual_lon = 0.0
+        var virtual_lat = 65.01355297927051
+        var virtual_lon = 25.464019811372978
         //val List = mutableListOf<ReminderInfo>()
         @SuppressLint("ServiceCast")
         fun showNotification(context: Context, message: String, key: String, lat: Double, lon: Double) {
+            println("ShowNotification reached")
+            val firebase = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
+            val reference = firebase.getReference("reminders")
 
             val CHANNEL_ID = "REMINDER_APP_NOTIFICATION_CHANNEL"
             var notificationId = Random.nextInt(10, 1000) + 5
@@ -81,16 +85,43 @@ class ReminderHistory : AppCompatActivity() {
                 }
                 notificationManager.createNotificationChannel(channel)
             }
+            if (key == "") {
+                notificationManager.notify(notificationId, notificationBuilder.build())
 
-            if (key != "") {
-                val results = floatArrayOf()
-                Location.distanceBetween(virtual_lat, virtual_lon, lat, lon, results)
-                if (results[0] <= GEOFENCE_RADIUS) {
-                    notificationManager.notify(notificationId, notificationBuilder.build())
-                }
             }
 
-            notificationManager.notify(notificationId, notificationBuilder.build())
+            if (key != "") {
+                var results = FloatArray(2)
+                Location.distanceBetween(virtual_lat, virtual_lon, lat, lon, results)
+                if (results[0] <= GEOFENCE_RADIUS) {
+                    println("ShowNotification within area")
+                    val remindr = reference.child(key!!)
+                    remindr.child("location_reached").setValue(true)
+                    notificationManager.notify(notificationId, notificationBuilder.build())
+                } else {
+                    val reminderListener = object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val reminder = snapshot.getValue<Reminder>()
+                            if (reminder != null) {
+                                println("Shownotificiation, entered geofence area")
+                                Log.d("ReminderReceiver", "Entered geofence area")
+                                if (reminder.location_reached) {
+                                    println("Show notification, should show notification")
+                                    notificationManager.notify(notificationId, notificationBuilder.build())
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            println("reminder:onCancelled: ${error.details}")
+                        }
+                    }
+                    val child = reference.child(key)
+                    child.addValueEventListener(reminderListener)
+
+
+                }
+            }
         }
 
         fun setReminderWithWorkManager(
@@ -157,9 +188,12 @@ class ReminderHistory : AppCompatActivity() {
                     )
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
-            val database = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
-            val reference = database.getReference("reminders")
-            reference.child("reminders").child(key).removeValue()
+            if (key != "") {
+                println("Deleted reminder with key:" + key)
+                val database = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
+                val reference = database.getReference("reminders")
+                reference.child(key).removeValue()
+            }
         }
     }
 }

@@ -120,7 +120,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     with(map) {
                         moveCamera(
                             CameraUpdateFactory.newLatLngZoom(
-                                LatLng(65.01355297927051, 25.464019811372978),
+                                LatLng(ReminderHistory.virtual_lat, ReminderHistory.virtual_lon),
                                 CAMERA_ZOOM_LEVEL
                             )
                         )
@@ -164,7 +164,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val reference = database.getReference("reminders")
             val key = reference.push().key
             if (key != null) {
-                val reminder = Reminder(key, latlng.latitude, latlng.longitude, reminder_seen=false)
+                val reminder = Reminder(key, latlng.latitude, latlng.longitude, reminder_seen=false, location_reached = false)
                 reference.child(key).setValue(reminder)
             }
             createGeoFence(latlng, key!!, geofencingClient)

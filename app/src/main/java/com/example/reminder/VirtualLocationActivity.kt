@@ -111,7 +111,7 @@ class VirtualLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                     with(map) {
                         moveCamera(
                             CameraUpdateFactory.newLatLngZoom(
-                                LatLng(65.01355297927051, 25.464019811372978),
+                                LatLng(ReminderHistory.virtual_lat, ReminderHistory.virtual_lon),
                                 CAMERA_ZOOM_LEVEL
                             )
                         )
@@ -139,28 +139,29 @@ class VirtualLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         map.setOnMapLongClickListener { latlng ->
 
             map.addMarker(
-                MarkerOptions().position(latlng)
-                    .title("Current location")
+                    MarkerOptions().position(latlng)
+                            .title("Current location")
             ).showInfoWindow()
             map.addCircle(
-                CircleOptions()
-                    .center(latlng)
-                    .strokeColor(Color.argb(50, 70, 70, 70))
-                    .fillColor(Color.argb(70, 150, 150, 150))
-                    .radius(GEOFENCE_RADIUS.toDouble())
+                    CircleOptions()
+                            .center(latlng)
+                            .strokeColor(Color.argb(50, 70, 70, 70))
+                            .fillColor(Color.argb(70, 150, 150, 150))
+                            .radius(GEOFENCE_RADIUS.toDouble())
             )
 
-            val database = Firebase.database
+
+            /*val database = Firebase.database
             val reference = database.getReference("reminders")
             val key = reference.push().key
             if (key != null) {
                 val reminder = Reminder(key, latlng.latitude, latlng.longitude, reminder_seen=false)
                 reference.child(key).setValue(reminder)
-            }
+            }*/
             Toast.makeText(
-                this,
-                "Virtual location set: lat: ${latlng.latitude}, long: ${latlng.longitude}",
-                Toast.LENGTH_LONG
+                    this,
+                    "Virtual location set: lat: ${latlng.latitude}, long: ${latlng.longitude}",
+                    Toast.LENGTH_LONG
             ).show()
 
             ReminderHistory.virtual_lat = latlng.latitude

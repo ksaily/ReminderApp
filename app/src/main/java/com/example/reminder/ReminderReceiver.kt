@@ -16,7 +16,7 @@ import com.google.firebase.ktx.Firebase
 import java.lang.reflect.Array.get
 import com.example.reminder.ReminderHistory
 
-class ReminderReceiver : BroadcastReceiver(){
+class ReminderReceiver : BroadcastReceiver() {
     lateinit var key: String
     lateinit var lat: String
     lateinit var lon: String
@@ -32,28 +32,34 @@ class ReminderReceiver : BroadcastReceiver(){
             val lat = intent.getStringExtra("lat")
             val lon = intent.getStringExtra("lon")
         }
+        println("ReminderReceiver reached")
 
         if (context != null) {
             if (key == "") {
                 ReminderHistory.showNotification(context!!, text!!, key, lat.toDouble(), lon.toDouble())
             }
+
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
             val geofencingTransition = geofencingEvent.geofenceTransition
+            println("ReminderReceiver reached")
+            val firebase = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
+            val reference = firebase.getReference("reminders")
 
             if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_ENTER || geofencingTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
 
-                val firebase = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
-                val reference = firebase.getReference("reminders")
                 val reminderListener = object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val reminder = snapshot.getValue<Reminder>()
                         if (reminder != null) {
+                            println("ReminderReceiver, entered geofence area")
                             Log.d("ReminderReceiver", "Entered geofence area")
+                            reference.child(key).child("location_reached").setValue(true)
                             if (reminder.reminder_seen) {
+                                println("ReminderReceiver, should show notification" + key)
                                 ReminderHistory.showNotification(context, text, key, reminder.lat, reminder.lon)
-                                }
                             }
                         }
+                    }
 
                     override fun onCancelled(error: DatabaseError) {
                         println("reminder:onCancelled: ${error.details}")
@@ -67,10 +73,13 @@ class ReminderReceiver : BroadcastReceiver(){
                 MapsActivity.removeGeofences(context, triggeringGeofences)
             }
             if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+
+                reference.child(key).child("location_reached").setValue(false)
+
                 Log.d("ReminderReceiver", "Exited geofence area")
-            }
             }
         }
     }
+}
 
 

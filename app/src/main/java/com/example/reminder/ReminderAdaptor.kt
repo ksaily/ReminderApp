@@ -1,5 +1,6 @@
 package com.example.reminder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var reminderCalendar: Calendar
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, container: ViewGroup?): View? {
         var rowBinding = ActivityReminderListviewBinding.inflate(inflater, container, false)
         reminderCalendar = GregorianCalendar.getInstance()
@@ -37,7 +39,6 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
             val timeparts = list[position].date.split(" ").toTypedArray()[1].split(":").toTypedArray()
             /*reminderCalendar.set(Calendar.YEAR, dateparts[2].toInt())
             reminderCalendar.set(Calendar.MONTH, dateparts[1].toInt() - 1)*/
-            reminderCalendar.set(Calendar.DAY_OF_MONTH, dateparts[0].toInt())
             reminderCalendar.set(Calendar.HOUR_OF_DAY, timeparts[0].toInt())
             reminderCalendar.set(Calendar.MINUTE, timeparts[1].toInt())
 
@@ -48,7 +49,8 @@ class ReminderAdaptor(context: Context, private val list: List<ReminderInfo>?) :
                 rowBinding.ReminderInfo.text = list!![position].name
                 rowBinding.ReminderDate.text = list[position].date
                 if (list!![position].lat != 0.0) {
-                    rowBinding.LocationText.text = (list!![position].lat.toString() + list[position].lon.toString())
+                    rowBinding.LocationText.text = (list!![position].lat.toString() +
+                            "\n" + list[position].lon.toString())
 
                 }
             }

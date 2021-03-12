@@ -32,15 +32,20 @@ class ReminderWorker(appContext: Context, workerParams: WorkerParameters):
 
         if (key == "") {
             //if there is no location requirement
+                println("ReminderWorker no location requirement")
             ReminderHistory.showNotification(applicationContext, text!!, key, lat, lon)
         }
+        val database = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
+        val reference = database.getReference("reminders")
 
         if (key != "") {
             //if there is a location requirement, wait for geofence enter(ReminderReceiver)
             //set reminder seen to true
-            val database = Firebase.database("https://reminder-app-306517-default-rtdb.firebaseio.com/")
-            val reference = database.getReference("reminders")
-            val reminder = reference.child(key!!).child("reminder_seen").setValue(true)
+            val reminder = reference.child(key!!)
+            reminder.child("reminder_seen").setValue(true)
+            println("ReminderWorker fired reminder")
+            ReminderHistory.showNotification(applicationContext, text!!, key, lat, lon)
+            }
             /* val reminderListener = object : ValueEventListener {
                override fun onDataChange(snapshot: DataSnapshot) {
                     val reminder = reference.child(key!!)
@@ -55,7 +60,7 @@ class ReminderWorker(appContext: Context, workerParams: WorkerParameters):
             }
             val child = reference.child(key!!)
             child.addValueEventListener(reminderListener)*/
-        }
+
 
         // Indicate whether the work finished successfully with the Result
         return Result.success()
